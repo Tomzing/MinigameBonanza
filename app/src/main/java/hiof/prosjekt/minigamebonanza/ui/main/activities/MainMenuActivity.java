@@ -1,4 +1,4 @@
-package hiof.prosjekt.minigamebonanza;
+package hiof.prosjekt.minigamebonanza.ui.main.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,10 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 
-import hiof.prosjekt.minigamebonanza.ui.main.MainFragment;
-import hiof.prosjekt.minigamebonanza.ui.main.Minigame1;
+import hiof.prosjekt.minigamebonanza.R;
+import hiof.prosjekt.minigamebonanza.ui.main.fragments.MainFragment;
 
 import static android.content.ContentValues.TAG;
 
@@ -18,7 +17,7 @@ public class MainMenuActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_activity);
+        setContentView(R.layout.background_fragment);
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -65,9 +64,29 @@ public class MainMenuActivity extends AppCompatActivity {
     public void startGameOnclick(View v) {
         switch (v.getId()) {
             case R.id.startGameBtn:
-                Intent intent = new Intent(getApplicationContext(), Minigame1.class);
+                Intent intent = new Intent(getApplicationContext(), Minigame1Activity.class);
+
                 startActivity(intent);
                 Log.i(TAG, "Trykket på startgame");
+        }
+    }
+
+    public void startSettingsOnClick(View v) {
+        switch (v.getId()) {
+            case R.id.startSettingsBtn:
+                Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
+
+                startActivity(intent);
+                Log.i(TAG, "Trykket på settings");
+        }
+    }
+
+    public void startLeaderboardOnClick(View v) {
+        switch (v.getId()) {
+            case R.id.startLeaderboardBtn:
+                Intent intent = new Intent(getApplicationContext(), LeaderboardActivity.class);
+
+                startActivity(intent);
         }
     }
 

@@ -7,13 +7,13 @@
 
     <activity
         android:id="@+id/MainMenuActivity"
-        android:name="hiof.prosjekt.minigamebonanza.MainMenuActivity"
+        android:name="hiof.prosjekt.minigamebonanza.ui.main.activities.MainMenuActivity"
         android:label="main_activity"
         android:screenOrientation="landscape"
-        tools:layout="@layout/main_activity" />
+        tools:layout="@layout/background_fragment" />
     <fragment
         android:id="@+id/mainFragment"
-        android:name="hiof.prosjekt.minigamebonanza.ui.main.MainFragment"
+        android:name="hiof.prosjekt.minigamebonanza.ui.main.fragments.MainFragment"
         android:label="main_fragment"
         android:screenOrientation="landscape"
         tools:layout="@layout/main_fragment" >
@@ -29,7 +29,7 @@
     </fragment>
     <fragment
         android:id="@+id/chooseGamemodeFragment4"
-        android:name="hiof.prosjekt.minigamebonanza.ui.main.ChooseGamemodeFragment"
+        android:name="hiof.prosjekt.minigamebonanza.ui.main.fragments.ChooseGamemodeFragment"
         android:label="choose_gamemode_fragment"
         tools:layout="@layout/choose_gamemode_fragment" >
         <action
@@ -38,7 +38,7 @@
     </fragment>
     <fragment
         android:id="@+id/MiniGame1Fragment"
-        android:name="hiof.prosjekt.minigamebonanza.ui.main.ChooseGamemodeFragment"
+        android:name="hiof.prosjekt.minigamebonanza.ui.main.fragments.ChooseGamemodeFragment"
         android:label="choose_gamemode_fragment"
         tools:layout="@layout/choose_gamemode_fragment" >
         <action
@@ -47,26 +47,26 @@
     </fragment>
     <fragment
         android:id="@+id/miniGame2Fragment"
-        android:name="hiof.prosjekt.minigamebonanza.ui.main.ChooseGamemodeFragment"
+        android:name="hiof.prosjekt.minigamebonanza.ui.main.fragments.ChooseGamemodeFragment"
         android:label="choose_gamemode_fragment"
         tools:layout="@layout/choose_gamemode_fragment" />
     <fragment
         android:id="@+id/leaderboardFragment"
-        android:name="hiof.prosjekt.minigamebonanza.ui.main.LeaderboardFragment"
+        android:name="hiof.prosjekt.minigamebonanza.ui.main.fragments.LeaderboardFragment"
         android:label="fragment_leaderboard_list"
         tools:layout="@layout/fragment_leaderboard_list" />
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="hiof.prosjekt.minigamebonanza.ui.main.SettingsFragment"
+        android:name="hiof.prosjekt.minigamebonanza.ui.main.fragments.SettingsFragment"
         android:label="SettingsFragment" />
     <activity
         android:id="@+id/Minigame1Activity"
-        android:name="hiof.prosjekt.minigamebonanza.ui.main.Minigame1"
+        android:name="hiof.prosjekt.minigamebonanza.ui.main.activities.Minigame1Activity"
         android:label="activity_minigame1"
         tools:layout="@layout/activity_minigame1" />
     <activity
         android:id="@+id/Minigame2Activity"
-        android:name="hiof.prosjekt.minigamebonanza.ui.main.Minigame1"
+        android:name="hiof.prosjekt.minigamebonanza.ui.main.activities.Minigame1Activity"
         android:label="activity_minigame1"
         tools:layout="@layout/activity_minigame1" />
 </navigation>

@@ -5,7 +5,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainMenuActivity" >
+    tools:context=".ui.main.activities.MainMenuActivity" >
 
     <ImageView
         android:id="@+id/imageView"
@@ -13,21 +13,8 @@
         android:layout_height="match_parent"
         android:contentDescription="@string/backgrond_image"
         android:scaleType="fitXY"
-        app:srcCompat="@drawable/app_background" />
 
-    <TextView
-        android:id="@+id/appTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:shadowRadius="20"
-        android:text="@string/minigame_bonanza"
-        android:textAllCaps="false"
-        android:textColor="#6FB36F"
-        android:textColorLink="#000000"
-        android:textSize="36sp"
-        tools:text="Minigame Bonanza"
-        />
+        app:srcCompat="@drawable/app_background" />
 
 
 </FrameLayout>

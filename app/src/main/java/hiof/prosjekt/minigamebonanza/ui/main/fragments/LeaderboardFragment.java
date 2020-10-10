@@ -1,4 +1,4 @@
-package hiof.prosjekt.minigamebonanza.ui.main;
+package hiof.prosjekt.minigamebonanza.ui.main.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import hiof.prosjekt.minigamebonanza.R;
+import hiof.prosjekt.minigamebonanza.ui.main.MyItemRecyclerViewAdapter;
 import hiof.prosjekt.minigamebonanza.ui.main.dummy.DummyContent;
 
 /**

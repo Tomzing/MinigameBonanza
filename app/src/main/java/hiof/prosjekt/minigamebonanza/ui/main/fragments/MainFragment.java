@@ -1,4 +1,4 @@
-package hiof.prosjekt.minigamebonanza.ui.main;
+package hiof.prosjekt.minigamebonanza.ui.main.fragments;
 
 import androidx.lifecycle.ViewModelProviders;
 
@@ -13,25 +13,30 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import hiof.prosjekt.minigamebonanza.R;
+import hiof.prosjekt.minigamebonanza.ui.main.MainViewModel;
 
-public class ChooseGamemodeFragment extends Fragment {
+public class MainFragment extends Fragment  {
 
-    private ChooseGamemodeViewModel mViewModel;
+    private MainViewModel mViewModel;
 
-    public static ChooseGamemodeFragment newInstance() {
-        return new ChooseGamemodeFragment();
+    public static MainFragment newInstance() {
+        return new MainFragment();
     }
 
+    @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.choose_gamemode_fragment, container, false);
+
+        View v = inflater.inflate(R.layout.main_fragment, container, false);
+
+        return inflater.inflate(R.layout.main_fragment, container, false);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = ViewModelProviders.of(this).get(ChooseGamemodeViewModel.class);
+        mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         // TODO: Use the ViewModel
     }
 

@@ -1,4 +1,4 @@
-package hiof.prosjekt.minigamebonanza.ui.main;
+package hiof.prosjekt.minigamebonanza.ui.main.fragments;
 
 import android.os.Bundle;
 

@@ -5,7 +5,26 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.main.MainFragment">
+
+    tools:context=".ui.main.fragments.MainFragment">
+
+    <TextView
+        android:id="@+id/appTitle2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:shadowRadius="20"
+        android:text="@string/minigame_bonanza"
+        android:textAllCaps="false"
+        android:textColor="#6FB36F"
+        android:textColorLink="#000000"
+        android:textSize="36sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.023"
+        tools:text="Minigame Bonanza" />
 
     <TextView
         android:id="@+id/message"
@@ -32,10 +51,11 @@
         tools:text="Start game" />
 
     <Button
-        android:id="@+id/settingsBtn"
+        android:id="@+id/startSettingsBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="112dp"
+        android:onClick="startSettingsOnClick"
         android:text="@string/settings"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -44,10 +64,11 @@
         tools:text="Settings" />
 
     <Button
-        android:id="@+id/leaderboardBtn"
+        android:id="@+id/startLeaderboardBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="64dp"
+        android:onClick="startLeaderboardOnClick"
         android:text="@string/leaderboard"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
