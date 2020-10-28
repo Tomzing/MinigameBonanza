@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 
 import hiof.prosjekt.minigamebonanza.R;
+import hiof.prosjekt.minigamebonanza.data.model.Minigame;
 import hiof.prosjekt.minigamebonanza.ui.main.fragments.MainFragment;
 
 import static android.content.ContentValues.TAG;
@@ -17,7 +18,7 @@ public class MainMenuActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.background_fragment);
+        setContentView(R.layout.fragment_background);
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -64,10 +65,11 @@ public class MainMenuActivity extends AppCompatActivity {
     public void startGameOnclick(View v) {
         switch (v.getId()) {
             case R.id.startGameBtn:
+                Log.i(TAG, "Trykket på startgame");
                 Intent intent = new Intent(getApplicationContext(), Minigame1Activity.class);
+                Minigame minigame1 = new Minigame(1,"Test Minigame","Quickly press the button to cheat your way to victory",10);
 
                 startActivity(intent);
-                Log.i(TAG, "Trykket på startgame");
         }
     }
 

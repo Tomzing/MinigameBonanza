@@ -40,4 +40,8 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_settings">SettingsActivity</string>
+    <string name="attempts_remaining">Attempts remaining: </string>
+    <string name="points">Points: </string>
+    <string name="time_remaining">Time remaining: </string>
+    <string name="minigameDesc">If you see this text, something has gone wrong</string>
 </resources>

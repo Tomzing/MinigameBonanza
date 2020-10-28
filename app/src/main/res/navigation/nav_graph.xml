@@ -10,13 +10,13 @@
         android:name="hiof.prosjekt.minigamebonanza.ui.main.activities.MainMenuActivity"
         android:label="main_activity"
         android:screenOrientation="landscape"
-        tools:layout="@layout/background_fragment" />
+        tools:layout="@layout/fragment_background" />
     <fragment
         android:id="@+id/mainFragment"
         android:name="hiof.prosjekt.minigamebonanza.ui.main.fragments.MainFragment"
         android:label="main_fragment"
         android:screenOrientation="landscape"
-        tools:layout="@layout/main_fragment" >
+        tools:layout="@layout/fragment_mainmenu" >
         <action
             android:id="@+id/action_mainFragment_to_chooseGamemodeFragment42"
             app:destination="@id/chooseGamemodeFragment4" />
@@ -63,10 +63,10 @@
         android:id="@+id/Minigame1Activity"
         android:name="hiof.prosjekt.minigamebonanza.ui.main.activities.Minigame1Activity"
         android:label="activity_minigame1"
-        tools:layout="@layout/activity_minigame1" />
+        tools:layout="@layout/fragment_minigame1" />
     <activity
         android:id="@+id/Minigame2Activity"
         android:name="hiof.prosjekt.minigamebonanza.ui.main.activities.Minigame1Activity"
         android:label="activity_minigame1"
-        tools:layout="@layout/activity_minigame1" />
+        tools:layout="@layout/fragment_minigame1" />
 </navigation>

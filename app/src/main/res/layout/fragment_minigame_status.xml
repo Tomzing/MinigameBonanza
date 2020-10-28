@@ -6,12 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <data>
-        <variable>
-            name=""
-        </variable>
-    </data>
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/appbar"
 
@@ -36,10 +30,10 @@
 
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/attemptsRemainingText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Attempts remaining:"
+                android:text="@string/attempts_remaining"
                 android:textColor="#000000"
                 android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -50,10 +44,10 @@
                 app:layout_constraintVertical_bias="0.6" />
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/pointsText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Points:"
+                android:text="@string/points"
                 android:textColor="#000000"
                 android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -62,10 +56,10 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/textView4"
+                android:id="@+id/timeRemainingText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Time remaining:"
+                android:text="@string/time_remaining"
                 android:textColor="#000000"
                 android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="parent"

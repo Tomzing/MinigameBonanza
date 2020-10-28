@@ -3,19 +3,23 @@ package hiof.prosjekt.minigamebonanza.ui.main.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProviders;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import hiof.prosjekt.minigamebonanza.R;
+import hiof.prosjekt.minigamebonanza.ui.main.viewmodel.StatusbarViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link FragmentMinigameStatusbar#newInstance} factory method to
+ * Use the {@link MinigameStatusbarFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FragmentMinigameStatusbar extends Fragment {
+public class MinigameStatusbarFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -26,7 +30,7 @@ public class FragmentMinigameStatusbar extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public FragmentMinigameStatusbar() {
+    public MinigameStatusbarFragment() {
         // Required empty public constructor
     }
 
@@ -39,8 +43,8 @@ public class FragmentMinigameStatusbar extends Fragment {
      * @return A new instance of fragment fragment_minigame_status.
      */
     // TODO: Rename and change types and number of parameters
-    public static FragmentMinigameStatusbar newInstance(String param1, String param2) {
-        FragmentMinigameStatusbar fragment = new FragmentMinigameStatusbar();
+    public static MinigameStatusbarFragment newInstance(String param1, String param2) {
+        MinigameStatusbarFragment fragment = new MinigameStatusbarFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -55,6 +59,11 @@ public class FragmentMinigameStatusbar extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        /*StatusbarViewModel mViewModel = ViewModelProviders.of(this).get(StatusbarViewModel.class);
+        TextView pointsText = getView().findViewById(R.id.pointsText);
+        pointsText.append(Integer.toString(mViewModel.getAttemptsRemaining()));
+         */
     }
 
     @Override
