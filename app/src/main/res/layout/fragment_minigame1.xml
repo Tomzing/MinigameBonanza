@@ -19,13 +19,18 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="388dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_editor_absoluteX="0dp" />
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout="@layout/fragment_minigame_status" />
 
     <Button
         android:id="@+id/completeBtn"
+        style="@android:style/Widget.Holo.Light.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="btnHandler"
+        android:backgroundTint="#5A8E39"
+        android:onClick="btnSuccess"
+        android:rotationX="25"
+        android:rotationY="-22"
         android:text="Complete minigame"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -36,9 +41,12 @@
 
     <Button
         android:id="@+id/failBtn"
+        style="@android:style/Widget.Holo.Light.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="btnHandler"
+        android:backgroundTint="#FF5858"
+        android:onClick="btnFail"
+        android:rotationX="32"
         android:text="Fail minigame"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

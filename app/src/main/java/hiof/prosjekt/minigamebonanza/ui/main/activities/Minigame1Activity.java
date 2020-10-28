@@ -27,6 +27,7 @@ import hiof.prosjekt.minigamebonanza.ui.main.utility.MinigameUtility;
 import hiof.prosjekt.minigamebonanza.ui.main.viewmodel.StatusbarViewModel;
 
 import static android.content.ContentValues.TAG;
+import static hiof.prosjekt.minigamebonanza.R.id.completeBtn;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -55,7 +56,7 @@ public class Minigame1Activity extends AppCompatActivity {
         //pointsText.append(" 10");
 
         attemptsRemainingText = findViewById(R.id.attemptsRemainingText);
-        attemptsRemainingText.append(Integer.toString(mViewModel.getStatusbar().getAttemptsRemaining()));
+        attemptsRemainingText.append(Integer.toString(mViewModel.getAttemptsRemaining()));
     }
 
     public void initPreView() {
@@ -132,13 +133,14 @@ public class Minigame1Activity extends AppCompatActivity {
 
     }
 
-    public void btnHandler(View v) {
-        switch (v.getId()) {
-            case R.id.completeBtn:
-                Log.i("tag", "Pressed success");
-            case R.id.failBtn:
-                Log.i("tag","Fail button pressed");
-        }
+    public void btnSuccess(View v) {
+        Log.i("tag", "Pressed success");
+        succeedMinigame();
+    }
+
+    public void btnFail(View v) {
+        Log.i("tag","Fail button pressed");
+        failMinigame();
     }
 
     public void succeedMinigame() {
@@ -160,6 +162,7 @@ public class Minigame1Activity extends AppCompatActivity {
             startActivity(intent);
         }
         else {
+            Log.i("tag","No attempts remaining, go to results screen");
             //TODO implement results screen
         }
 

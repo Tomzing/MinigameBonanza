@@ -16,7 +16,7 @@ public class StatusbarViewModel extends ViewModel {
 
     public Statusbar getStatusbar() {
         if(activeStatusbar == null) {
-            activeStatusbar = new Statusbar(3,0);
+            activeStatusbar = new Statusbar(1,0);
         }
         return activeStatusbar;
     }
