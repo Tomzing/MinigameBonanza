@@ -38,7 +38,6 @@ public class StatusbarViewModel extends ViewModel {
 
     public void setScore(int score) {
         int currentScore = Integer.parseInt(getScore()) + score;
-        System.out.println("SCORE FROM SETSCORE: " + currentScore);
         mState.set("Score",currentScore);
     }
 
@@ -47,14 +46,13 @@ public class StatusbarViewModel extends ViewModel {
     }*/
 
     public String getAttemptsRemaining() {
-        System.out.println(mState.get("AttemptsRemaining"));
+        System.out.println("Attempts remaining: " + mState.get("AttemptsRemaining"));
         return mState.get("AttemptsRemaining");
     }
 
     public String getScore() {
         //System.out.println(mState.get("Score"));
         //return Integer.parseInt((String) mState.get("Score"));
-        System.out.println("SCORE FROM GETSCORE: " + mState.get("Score").toString());
         return String.valueOf(mState.get("Score"));
     }
 }
