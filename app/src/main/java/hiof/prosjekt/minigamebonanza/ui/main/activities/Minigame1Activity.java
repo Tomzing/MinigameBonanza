@@ -28,6 +28,9 @@ import hiof.prosjekt.minigamebonanza.ui.main.viewmodel.StatusbarViewModel;
 
 import static android.content.ContentValues.TAG;
 import static hiof.prosjekt.minigamebonanza.R.id.completeBtn;
+import static hiof.prosjekt.minigamebonanza.R.id.start;
+import static hiof.prosjekt.minigamebonanza.R.id.stop;
+import static hiof.prosjekt.minigamebonanza.R.id.timeRemainingNmbr;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -35,34 +38,60 @@ import static hiof.prosjekt.minigamebonanza.R.id.completeBtn;
  */
 public class Minigame1Activity extends AppCompatActivity {
 
-    TextView timeRemainingText, pointsText, attemptsRemainingText, minigameDescText;
-
-    private Minigame1ViewModel model;
-
     Minigame minigame1 = new Minigame(1,"Test Minigame","Quickly press the button to cheat your way to victory",10);
-    //Minigame1ViewModel viewModel = ViewModelProviders.of(this).get(Minigame1ViewModel.class);
 
+    TextView timeRemainingText, timeRemainingNmbr, pointsText, attemptsRemainingText, minigameDescText;
+    Runnable minigameRunnable = new Runnable() {
+        public void run() {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.container, Minigame1Fragment.newInstance())
+                    .commitNow();
+
+            initMinigameView();
+            startMinigameTimer();
+            isRunning = true;
+            Log.i("tag", "This'll run 300 milliseconds later");
+        }
+    };
+    Handler minigameHandler = new Handler();
+    CountDownTimer cdt = new CountDownTimer(minigame1.getTime()*1000, 500) {
+        public void onTick(long millisUntilFinished) {
+            // Used for formatting digit to be in 2 digits only
+            timeRemainingText = findViewById(R.id.timeRemainingText);
+            timeRemainingNmbr = findViewById(R.id.timeRemainingNmbr);
+            NumberFormat f = new DecimalFormat("0");
+            long hour = (millisUntilFinished / 3600000) % 24;
+            long min = (millisUntilFinished / 60000) % 60;
+            long sec = (millisUntilFinished / 1000) % 60;
+            timeRemainingNmbr.setText(f.format(sec));
+            if(Integer.parseInt(f.format(sec)) <  4) {
+                timeRemainingText.setTextColor(Color.RED);
+                timeRemainingNmbr.setTextColor(Color.RED);
+            }
+            else if(Integer.parseInt(f.format(sec)) == 0) {
+                timeRemainingText.setText("Failure");
+            }
+        }
+        // When timer is done, run this. This'll be a failure condition
+        public void onFinish() {
+            //timeRemainingNmbr.setText("Dang");
+            failMinigame();
+        }
+    };
+    boolean isRunning = false;
 
     public void initMinigameView() {
 
-        //StatusbarViewModel mViewModel = ViewModelProviders.of(this).get(StatusbarViewModel.class);
         StatusbarViewModel mViewModel = new ViewModelProvider(this).get(StatusbarViewModel.class);
-        //timeRemainingText = findViewById(R.id.timeRemainingText);
-        //timeRemainingText.append(" " + minigame1.getTime() + "s");
 
         //Points and attempts remaining gets infromation from the viewmodel
         pointsText = findViewById((R.id.pointsText));
-        pointsText.append(Integer.toString(mViewModel.getStatusbar().getScore()));
+        //pointsText.append(Integer.toString(mViewModel.getScore()));
+        pointsText.setText(mViewModel.getScore());
         //pointsText.append(" 10");
 
         attemptsRemainingText = findViewById(R.id.attemptsRemainingText);
-        attemptsRemainingText.append(Integer.toString(mViewModel.getAttemptsRemaining()));
-    }
-
-    public void initPreView() {
-        minigameDescText = findViewById(R.id.minigameDescText);
-        //minigameDescText.setText("minigame1.getDescription()");
-        //minigameDescText.append("text");
+        attemptsRemainingText.append(" " + mViewModel.getAttemptsRemaining());
     }
 
     @Override
@@ -90,51 +119,42 @@ public class Minigame1Activity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_FULLSCREEN);
         //model = new ViewModelProvider(this).get(StatusbarViewModel.class);
 
+
+
+        startMinigame();
+    }
+
+    public void startMinigame() {
         //Before the minigame, a black box with white text explaining the minigame
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, PreMinigameFragment.newInstance("hei","nei"))
+                .replace(R.id.container, PreMinigameFragment.newInstance(minigame1.getDescription()))
                 .commitNow();
-        initPreView();
 
         // Opens the actual minigame on a timer
-        new android.os.Handler().postDelayed(
-                new Runnable() {
-                    public void run() {
-                            getSupportFragmentManager().beginTransaction()
-                                    .replace(R.id.container, Minigame1Fragment.newInstance())
-                                    .commitNow();
-
-                        initMinigameView();
-
-                        //Starts the minigame timer
-                        timeRemainingText = findViewById(R.id.timeRemainingText);
-                        new CountDownTimer(minigame1.getTime()*1000, 1000) {
-                            public void onTick(long millisUntilFinished) {
-                                // Used for formatting digit to be in 2 digits only
-                                NumberFormat f = new DecimalFormat("00");
-                                long hour = (millisUntilFinished / 3600000) % 24;
-                                long min = (millisUntilFinished / 60000) % 60;
-                                long sec = (millisUntilFinished / 1000) % 60;
-                                timeRemainingText.setText("Time remaining: " +  f.format(sec));
-                                if(Integer.parseInt(f.format(sec)) <  4) {
-                                    timeRemainingText.setTextColor(Color.RED);
-                                }
-                            }
-                            // When timer is done, run this. This'll be a failure condition
-                            public void onFinish() {
-                                timeRemainingText.setText("Dang");
-                                failMinigame();
-                            }
-                        }.start();
-                        Log.i("tag", "This'll run 300 milliseconds later");
-                    }
-                },
-                1000);
+        if(!isRunning) {
+            minigameHandler.postDelayed(minigameRunnable, 3000);
+        }
+        else {
+            minigameHandler.removeCallbacks(minigameRunnable);
+            isRunning = false;
+        }
 
     }
 
+    //Starts the minigame timer
+    public void startMinigameTimer() {
+
+        if(!isRunning) {
+            Log.i("tag","Minigame timer triggered!");
+            cdt.start();
+        }
+        else {
+            cdt.cancel();
+        }
+    }
+
     public void btnSuccess(View v) {
-        Log.i("tag", "Pressed success");
+        Log.i("tag", "Pressed complete minigame");
         succeedMinigame();
     }
 
@@ -147,19 +167,27 @@ public class Minigame1Activity extends AppCompatActivity {
 
         StatusbarViewModel mViewModel = new ViewModelProvider(this).get(StatusbarViewModel.class);
 
+        //mViewModel.setScore(10);
+        int score = MinigameUtility.calculatePoints(minigame1.getTime(), Integer.parseInt((String) timeRemainingNmbr.getText()));
+        mViewModel.setScore(score);
 
-        //mViewModel.setScore(MinigameUtility.calculatePoints());
+        //TODO implement method for going to next minigame, if no minigames left go to results screen
     }
 
     // Method for failing a minigame
     public void failMinigame() {
         //StatusbarViewModel mViewModel = ViewModelProviders.of(this).get(StatusbarViewModel.class);
         StatusbarViewModel mViewModel = new ViewModelProvider(this).get(StatusbarViewModel.class);
-        if(mViewModel.getAttemptsRemaining() != 0) {
+        if(Integer.parseInt(mViewModel.getAttemptsRemaining()) != 0) {
+            Log.i("tag","Fail minigame triggered with more than 0 attempts");
+            minigameHandler.removeCallbacks(minigameRunnable);
             mViewModel.decreaseAttemptsRemaining();
+            isRunning = false;
+            cdt.cancel();
 
-            Intent intent = new Intent(getApplicationContext(), Minigame1Activity.class);
-            startActivity(intent);
+            //Intent intent = new Intent(this, Minigame1Activity.class);
+            //startActivity(intent);
+            startMinigame();
         }
         else {
             Log.i("tag","No attempts remaining, go to results screen");

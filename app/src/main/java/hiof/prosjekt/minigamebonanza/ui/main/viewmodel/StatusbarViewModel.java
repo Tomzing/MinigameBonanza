@@ -1,39 +1,60 @@
 package hiof.prosjekt.minigamebonanza.ui.main.viewmodel;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.ViewModel;
 
 import hiof.prosjekt.minigamebonanza.data.model.Statusbar;
 
 public class StatusbarViewModel extends ViewModel {
-    private SavedStateHandle mState;
+    private final SavedStateHandle mState;
+    private int attemptsRemaining, score;
 
     public StatusbarViewModel(SavedStateHandle savedStateHandle) {
         mState = savedStateHandle;
+        if(mState.get("AttemptsRemaining") == null) {
+            activeStatusbar = new Statusbar(3,0);
+            mState.set("AttemptsRemaining","3");
+            mState.set("Score","0");
+        }
     }
 
     private Statusbar activeStatusbar;
 
     public Statusbar getStatusbar() {
-        if(activeStatusbar == null) {
-            activeStatusbar = new Statusbar(1,0);
+        if(mState.get("AttemptsRemaining") == null) {
+            activeStatusbar = new Statusbar(3,0);
+            mState.set("AttemptsRemaining","3");
+            mState.set("Score","0");
         }
         return activeStatusbar;
     }
 
     public void decreaseAttemptsRemaining() {
+        String attemptsRemaining = Integer.toString(activeStatusbar.getAttemptsRemaining()-1);
         activeStatusbar.setAttemptsRemaining(activeStatusbar.getAttemptsRemaining()-1);
+        mState.set("AttemptsRemaining",attemptsRemaining);
     }
 
     public void setScore(int score) {
-        activeStatusbar.setScore(score);
+        int currentScore = Integer.parseInt(getScore()) + score;
+        System.out.println("SCORE FROM SETSCORE: " + currentScore);
+        mState.set("Score",currentScore);
     }
 
-    public int getAttemptsRemaining() {
-        return activeStatusbar.getAttemptsRemaining();
+    /*public int getAttemptsRemaining() {
+        return Integer.parseInt((String) mState.get("AttemptsRemaining"));
+    }*/
+
+    public String getAttemptsRemaining() {
+        System.out.println(mState.get("AttemptsRemaining"));
+        return mState.get("AttemptsRemaining");
     }
 
-    public int getScore() {
-        return activeStatusbar.getScore();
+    public String getScore() {
+        //System.out.println(mState.get("Score"));
+        //return Integer.parseInt((String) mState.get("Score"));
+        System.out.println("SCORE FROM GETSCORE: " + mState.get("Score").toString());
+        return String.valueOf(mState.get("Score"));
     }
 }
