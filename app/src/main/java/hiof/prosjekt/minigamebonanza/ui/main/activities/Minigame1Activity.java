@@ -195,4 +195,12 @@ public class Minigame1Activity extends AppCompatActivity {
         }
 
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        minigameHandler.removeCallbacks(minigameRunnable);
+        cdt.cancel();
+        Log.i("tag","ONDESTROY INITIATED");
+    }
 }
