@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:motion="http://schemas.android.com/apk/res-auto">
+
+    <ConstraintSet android:id="@+id/start">
+        <Constraint
+            android:id="@+id/appTitle2"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintVertical_bias="0.044"
+            motion:layout_constraintTop_toTopOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:rotationY="-19"
+            android:rotation="198"
+            android:rotationX="-117"
+            motion:pathMotionArc="startVertical"
+            motion:transitionEasing="accelerate"
+            motion:layout_constraintHorizontal_bias="0.037" />
+        <Constraint
+            android:layout_height="40dp"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:layout_marginBottom="196dp"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintHorizontal_bias="0.03"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="202dp"
+            android:id="@+id/quitBtn"
+            motion:transitionEasing="accelerate" />
+        <Constraint
+            android:layout_height="66dp"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:layout_marginBottom="316dp"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintHorizontal_bias="0.933"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="201dp"
+            android:id="@+id/startLeaderboardBtn"
+            motion:transitionEasing="accelerate" />
+        <Constraint
+            android:layout_height="70dp"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:layout_marginBottom="40dp"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintHorizontal_bias="0.054"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="202dp"
+            android:id="@+id/startSettingsBtn"
+            motion:transitionEasing="accelerate" />
+        <Constraint
+            android:layout_height="83dp"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:layout_marginBottom="16dp"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintHorizontal_bias="1.0"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="201dp"
+            android:id="@+id/startGameBtn"
+            motion:transitionEasing="standard"
+            motion:pathMotionArc="flip" />
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/end">
+        <Constraint
+            motion:layout_constraintVertical_bias="0.113"
+            android:layout_height="wrap_content"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toTopOf="parent"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="wrap_content"
+            android:id="@+id/appTitle2" />
+    </ConstraintSet>
+    <ConstraintSet android:id="@+id/startGamePressed" >
+        <Constraint
+            android:id="@+id/startGameBtn"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="201dp"
+            android:layout_height="83dp"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="196dp"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:visibility="visible"
+            android:scaleX="1"
+            android:scaleY="1"
+            android:alpha="1"
+            motion:transitionEasing="decelerate" />
+    </ConstraintSet>
+    <ConstraintSet android:id="@+id/startGamePressedEnd" >
+        <Constraint
+            android:id="@+id/startGameBtn"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="201dp"
+            android:layout_height="83dp"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="196dp"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:scaleX="10"
+            android:scaleY="10"
+            android:alpha="1" />
+    </ConstraintSet>
+    <Transition
+        motion:constraintSetStart="@+id/start"
+        motion:constraintSetEnd="@+id/end"
+        motion:autoTransition="animateToEnd" >
+        <OnSwipe />
+    </Transition>
+    <Transition
+        motion:constraintSetStart="@+id/startGamePressed"
+        motion:constraintSetEnd="@+id/startGamePressedEnd"
+        motion:autoTransition="animateToEnd" >
+        <OnClick />
+        <KeyFrameSet >
+            <KeyTrigger
+                motion:motionTarget="@+id/startGameBtn"
+                motion:framePosition="0"
+                motion:onCross="@string/start_game" />
+        </KeyFrameSet>
+    </Transition>
+</MotionScene>

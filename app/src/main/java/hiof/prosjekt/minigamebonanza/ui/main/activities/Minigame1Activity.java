@@ -176,7 +176,6 @@ public class Minigame1Activity extends AppCompatActivity {
 
     // Method for failing a minigame
     public void failMinigame() {
-        //StatusbarViewModel mViewModel = ViewModelProviders.of(this).get(StatusbarViewModel.class);
         StatusbarViewModel mViewModel = new ViewModelProvider(this).get(StatusbarViewModel.class);
         if(Integer.parseInt(mViewModel.getAttemptsRemaining()) != 0) {
             Log.i("tag","Fail minigame triggered with more than 0 attempts");

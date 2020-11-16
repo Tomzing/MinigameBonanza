@@ -1,10 +1,12 @@
 package hiof.prosjekt.minigamebonanza.ui.main.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.motion.widget.MotionLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 
 import hiof.prosjekt.minigamebonanza.R;
@@ -63,14 +65,15 @@ public class MainMenuActivity extends AppCompatActivity {
     }
 
     public void startGameOnclick(View v) {
-        switch (v.getId()) {
-            case R.id.startGameBtn:
-                Log.i(TAG, "Trykket på startgame");
-                Intent intent = new Intent(getApplicationContext(), Minigame1Activity.class);
-                Minigame minigame1 = new Minigame(1,"Test Minigame","Quickly press the button to cheat your way to victory",10);
+        Log.i(TAG, "Trykket på startgame");
+        Intent intent = new Intent(getApplicationContext(), Minigame1Activity.class);
+        Minigame minigame1 = new Minigame(1,"Test Minigame","Quickly press the button to cheat your way to victory",10);
 
-                startActivity(intent);
-        }
+        //MotionLayout motionLayout = v.findViewById(R.id.startGamePressed);
+        //((MotionLayout)v.findViewById(R.id.startGamePressed)).transitionToEnd();
+        //((MotionLayout)findViewById(R.id.startGamePressedEnd)).transitionToEnd();
+
+        startActivity(intent);
     }
 
     public void startSettingsOnClick(View v) {
