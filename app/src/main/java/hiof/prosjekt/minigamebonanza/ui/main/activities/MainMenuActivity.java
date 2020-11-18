@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+import java.util.ArrayList;
+
 import hiof.prosjekt.minigamebonanza.R;
 import hiof.prosjekt.minigamebonanza.data.model.Minigame;
 import hiof.prosjekt.minigamebonanza.ui.main.fragments.MainFragment;
@@ -16,6 +18,8 @@ import hiof.prosjekt.minigamebonanza.ui.main.fragments.MainFragment;
 import static android.content.ContentValues.TAG;
 
 public class MainMenuActivity extends AppCompatActivity {
+
+    public final static ArrayList<Integer> COMPLETED_MINIGAMES = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,13 +70,19 @@ public class MainMenuActivity extends AppCompatActivity {
 
     public void startGameOnclick(View v) {
         Log.i(TAG, "Trykket på startgame");
-        Intent intent = new Intent(getApplicationContext(), Minigame1Activity.class);
+        Intent intent = new Intent(getApplicationContext(), Minigame2Activity.class);
         Minigame minigame1 = new Minigame(1,"Test Minigame","Quickly press the button to cheat your way to victory",10);
 
         //MotionLayout motionLayout = v.findViewById(R.id.startGamePressed);
         //((MotionLayout)v.findViewById(R.id.startGamePressed)).transitionToEnd();
         //((MotionLayout)findViewById(R.id.startGamePressedEnd)).transitionToEnd();
 
+        Bundle extras = new Bundle();
+
+        extras.putInt("ATTEMPTS_REMAINING", 3);
+        extras.putInt("SCORE", 0);
+        extras.putIntegerArrayList("COMPLETED_MINIGAMES", COMPLETED_MINIGAMES);
+        intent.putExtras(extras);
         startActivity(intent);
     }
 
@@ -93,6 +103,10 @@ public class MainMenuActivity extends AppCompatActivity {
 
                 startActivity(intent);
         }
+    }
+
+    public void quitAppOnClick(View v) {
+        finish();
     }
 
 }

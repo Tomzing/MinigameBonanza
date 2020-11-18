@@ -46,4 +46,8 @@
     <string name="time_remaining">Time remaining: </string>
     <string name="time_remaining_nmbr">00</string>
     <string name="minigameDesc">If you see this text, something has gone wrong</string>
+    <string name="results_screen">Results screen</string>
+    <string name="your_score_is">Your score is:</string>
+    <string name="attempts_remaining_results">Attempts remaining:</string>
+    <string name="submit_score">Submit score?</string>
 </resources>

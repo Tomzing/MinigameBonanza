@@ -47,7 +47,11 @@ public class StatusbarViewModel extends ViewModel {
 
     public String getAttemptsRemaining() {
         System.out.println("Attempts remaining: " + mState.get("AttemptsRemaining"));
-        return mState.get("AttemptsRemaining");
+        return String.valueOf(mState.get("AttemptsRemaining"));
+    }
+
+    public void setAttemptsReamining(int attemptsRemaining) {
+        mState.set("AttemptsRemaining",attemptsRemaining);
     }
 
     public String getScore() {

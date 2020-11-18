@@ -1,7 +1,6 @@
 package hiof.prosjekt.minigamebonanza.ui.main.fragments;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,16 +9,16 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProviders;
 
 import hiof.prosjekt.minigamebonanza.R;
 import hiof.prosjekt.minigamebonanza.ui.main.Minigame1ViewModel;
 
-
-public class Minigame1Fragment extends Fragment {
+public class FailureNotificationFragment extends Fragment {
     private Minigame1ViewModel mViewModel;
 
-    public static Minigame1Fragment newInstance() {
-        return new Minigame1Fragment();
+    public static FailureNotificationFragment newInstance() {
+        return new FailureNotificationFragment();
     }
 
     @Nullable
@@ -27,7 +26,7 @@ public class Minigame1Fragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        return inflater.inflate(R.layout.fragment_minigame1, container, false);
+        return inflater.inflate(R.layout.fragment_failurenotification, container, false);
     }
 
     @Override

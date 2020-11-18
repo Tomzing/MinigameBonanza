@@ -1,54 +1,52 @@
 package hiof.prosjekt.minigamebonanza.ui.main.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
+import android.media.AudioAttributes;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 
 import hiof.prosjekt.minigamebonanza.R;
 import hiof.prosjekt.minigamebonanza.data.model.Minigame;
-import hiof.prosjekt.minigamebonanza.ui.main.Minigame1ViewModel;
-import hiof.prosjekt.minigamebonanza.ui.main.fragments.Minigame1Fragment;
+import hiof.prosjekt.minigamebonanza.ui.main.fragments.FailureNotificationFragment;
+import hiof.prosjekt.minigamebonanza.ui.main.fragments.MinigameStarFragment;
 import hiof.prosjekt.minigamebonanza.ui.main.fragments.PreMinigameFragment;
 import hiof.prosjekt.minigamebonanza.ui.main.utility.MinigameUtility;
 import hiof.prosjekt.minigamebonanza.ui.main.viewmodel.StatusbarViewModel;
 
-import static android.content.ContentValues.TAG;
-import static hiof.prosjekt.minigamebonanza.R.id.completeBtn;
-import static hiof.prosjekt.minigamebonanza.R.id.start;
-import static hiof.prosjekt.minigamebonanza.R.id.stop;
-import static hiof.prosjekt.minigamebonanza.R.id.timeRemainingNmbr;
 
+public class Minigame2Activity extends AppCompatActivity {
 
-public class Minigame1Activity extends AppCompatActivity {
-
-    Minigame minigame1 = new Minigame(1,"Test Minigame","Quickly press the button to cheat your way to victory",10);
+    Minigame minigame1 = new Minigame(2,"Test Minigame","Press all the golden stars in order to succeed",2);
     public final static ArrayList<Integer> COMPLETED_MINIGAMES = new ArrayList<>();
     int runOnce = 0;
     boolean isRunning = false;
-
+    int goldStarsPressed = 0;
 
     TextView timeRemainingText, timeRemainingNmbr, pointsText, attemptsRemainingText, minigameDescText;
-
-    // Inserts the fragment with the minigame into the view
     Runnable minigameRunnable = new Runnable() {
         public void run() {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container, Minigame1Fragment.newInstance())
+                    .replace(R.id.container, MinigameStarFragment.newInstance())
                     .commitNow();
 
             initMinigameView();
@@ -83,6 +81,26 @@ public class Minigame1Activity extends AppCompatActivity {
         }
     };
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_background);
+
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_IMMERSIVE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN);
+
+        startMinigame();
+    }
+
+    // Initializes the minigame into the view
     public void initMinigameView() {
 
         StatusbarViewModel mViewModel = new ViewModelProvider(this).get(StatusbarViewModel.class);
@@ -112,25 +130,105 @@ public class Minigame1Activity extends AppCompatActivity {
             pointsText = findViewById((R.id.pointsText));
             pointsText.setText(mViewModel.getScore());
         }
+
+        RotateAnimation anim = new RotateAnimation(0.0f, 360.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+
+        anim.setInterpolator(new LinearInterpolator());
+        anim.setRepeatCount(Animation.INFINITE); //Repeat animation indefinitely
+        anim.setDuration(1000); //Put desired duration per anim cycle here, in milliseconds
+
+        ImageView goldStar1 = findViewById(R.id.goldStarImageView1);
+
+        goldStar1.startAnimation(anim);
+
+        goldStar1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ImageView goldStar1 = findViewById(R.id.goldStarImageView1);
+                goldStar1.clearAnimation();
+                goldStar1.setVisibility(View.GONE);
+                goldStarsPressed++;
+                hasPlayerPressedFiveStars(goldStarsPressed, false);
+                dingSoundEffectPlayer();
+            }
+        });
+
+        ImageView goldStar2 = findViewById(R.id.goldStarImageView2);
+        goldStar2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ImageView goldStar2 = findViewById(R.id.goldStarImageView2);
+                goldStar2.setVisibility(View.GONE);
+                goldStarsPressed++;
+                hasPlayerPressedFiveStars(goldStarsPressed, false);
+                dingSoundEffectPlayer();
+
+            }
+        });
+
+        ImageView goldStar3 = findViewById(R.id.goldStarImageView3);
+        goldStar3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ImageView goldStar1 = findViewById(R.id.goldStarImageView3);
+                goldStar1.setVisibility(View.GONE);
+                goldStarsPressed++;
+                hasPlayerPressedFiveStars(goldStarsPressed, false);
+                dingSoundEffectPlayer();
+
+            }
+        });
+
+        ImageView goldStar4 = findViewById(R.id.goldStarImageView4);
+        goldStar4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ImageView goldStar4 = findViewById(R.id.goldStarImageView4);
+                goldStar4.setVisibility(View.GONE);
+                goldStarsPressed++;
+                hasPlayerPressedFiveStars(goldStarsPressed, false);
+                dingSoundEffectPlayer();
+
+            }
+        });
+
+        ImageView goldStar5 = findViewById(R.id.goldStarImageView5);
+        goldStar5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ImageView goldStar5 = findViewById(R.id.goldStarImageView5);
+                goldStar5.setVisibility(View.GONE);
+                goldStarsPressed++;
+                hasPlayerPressedFiveStars(goldStarsPressed, false);
+                dingSoundEffectPlayer();
+
+            }
+        });
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_background);
+    public boolean hasPlayerPressedFiveStars(int goldStarsPressed, boolean isTest) {
+        if(goldStarsPressed == 5 ) {
+            if(!isTest) {
+                succeedMinigame();
+            }
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+    public void dingSoundEffectPlayer() {
 
-        View decorView = getWindow().getDecorView();
-        decorView.setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_IMMERSIVE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN);
+        MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.dingsound);
 
-        startMinigame();
+        AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .setUsage(AudioAttributes.USAGE_GAME)
+                .build();
+        mediaPlayer.setAudioAttributes(audioAttributes);
+        mediaPlayer.start();
+
     }
 
     public void startMinigame() {
@@ -181,7 +279,7 @@ public class Minigame1Activity extends AppCompatActivity {
         int score = MinigameUtility.calculatePoints(minigame1.getTime(), Integer.parseInt((String) timeRemainingNmbr.getText()));
         mViewModel.setScore(score);
 
-        Intent intent = new Intent(getApplicationContext(), Minigame2Activity.class);
+        Intent intent = new Intent(getApplicationContext(), ResultsActivity.class);
         Bundle extras = new Bundle();
 
         extras.putInt("ATTEMPTS_REMAINING", Integer.parseInt(mViewModel.getAttemptsRemaining()));
@@ -201,11 +299,27 @@ public class Minigame1Activity extends AppCompatActivity {
         if(Integer.parseInt(mViewModel.getAttemptsRemaining()) != 0) {
             Log.i("tag","Fail minigame triggered with more than 0 attempts");
 
+            goldStarsPressed = 0;
+
             cancelMinigame();
 
             mViewModel.setAttemptsReamining(Integer.parseInt(mViewModel.getAttemptsRemaining())-1);
 
-            startMinigame();
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.container, FailureNotificationFragment.newInstance())
+                    .commitNow();
+
+            //Handler to restart the minigame, after having shown the failure notification on-screen
+            Handler failureNotificationHandler = new Handler();
+            Runnable failureNotificationRunnable = new Runnable() {
+                public void run() {
+                    startMinigame();
+                }
+            };
+
+            failureNotificationHandler.postDelayed(failureNotificationRunnable, 3000);
+
+
         }
         else {
             Log.i("tag","No attempts remaining, go to results screen");
