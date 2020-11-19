@@ -36,7 +36,7 @@ import hiof.prosjekt.minigamebonanza.ui.main.viewmodel.StatusbarViewModel;
 
 public class Minigame2Activity extends AppCompatActivity {
 
-    Minigame minigame1 = new Minigame(2,"Test Minigame","Press all the golden stars in order to succeed",2);
+    Minigame minigame1 = new Minigame(2,"Test Minigame","Press all the golden stars in order to succeed",10);
     public final static ArrayList<Integer> COMPLETED_MINIGAMES = new ArrayList<>();
     int runOnce = 0;
     boolean isRunning = false;
@@ -100,6 +100,22 @@ public class Minigame2Activity extends AppCompatActivity {
         startMinigame();
     }
 
+    public void startMinigame() {
+        //Before the minigame, a black box with white text explaining the minigame
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, PreMinigameFragment.newInstance(minigame1.getDescription()))
+                .commitNow();
+
+        // Opens the actual minigame on a timer. After 3 seconds it'll start the timer
+        if(!isRunning) {
+            minigameHandler.postDelayed(minigameRunnable, 3000);
+        }
+        else {
+            minigameHandler.removeCallbacks(minigameRunnable);
+            isRunning = false;
+        }
+    }
+
     // Initializes the minigame into the view
     public void initMinigameView() {
 
@@ -138,7 +154,7 @@ public class Minigame2Activity extends AppCompatActivity {
         anim.setDuration(1000); //Put desired duration per anim cycle here, in milliseconds
 
         ImageView goldStar1 = findViewById(R.id.goldStarImageView1);
-
+        goldStar1.setSoundEffectsEnabled(false);
         goldStar1.startAnimation(anim);
 
         goldStar1.setOnClickListener(new View.OnClickListener() {
@@ -154,6 +170,7 @@ public class Minigame2Activity extends AppCompatActivity {
         });
 
         ImageView goldStar2 = findViewById(R.id.goldStarImageView2);
+        goldStar2.setSoundEffectsEnabled(false);
         goldStar2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -167,6 +184,7 @@ public class Minigame2Activity extends AppCompatActivity {
         });
 
         ImageView goldStar3 = findViewById(R.id.goldStarImageView3);
+        goldStar3.setSoundEffectsEnabled(false);
         goldStar3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -180,6 +198,7 @@ public class Minigame2Activity extends AppCompatActivity {
         });
 
         ImageView goldStar4 = findViewById(R.id.goldStarImageView4);
+        goldStar4.setSoundEffectsEnabled(false);
         goldStar4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -193,6 +212,7 @@ public class Minigame2Activity extends AppCompatActivity {
         });
 
         ImageView goldStar5 = findViewById(R.id.goldStarImageView5);
+        goldStar5.setSoundEffectsEnabled(false);
         goldStar5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -229,22 +249,6 @@ public class Minigame2Activity extends AppCompatActivity {
         mediaPlayer.setAudioAttributes(audioAttributes);
         mediaPlayer.start();
 
-    }
-
-    public void startMinigame() {
-        //Before the minigame, a black box with white text explaining the minigame
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, PreMinigameFragment.newInstance(minigame1.getDescription()))
-                .commitNow();
-
-        // Opens the actual minigame on a timer. After 3 seconds it'll start the timer
-        if(!isRunning) {
-            minigameHandler.postDelayed(minigameRunnable, 3000);
-        }
-        else {
-            minigameHandler.removeCallbacks(minigameRunnable);
-            isRunning = false;
-        }
     }
 
     //Starts the minigame timer
@@ -299,8 +303,6 @@ public class Minigame2Activity extends AppCompatActivity {
         if(Integer.parseInt(mViewModel.getAttemptsRemaining()) != 0) {
             Log.i("tag","Fail minigame triggered with more than 0 attempts");
 
-            goldStarsPressed = 0;
-
             cancelMinigame();
 
             mViewModel.setAttemptsReamining(Integer.parseInt(mViewModel.getAttemptsRemaining())-1);
@@ -318,7 +320,7 @@ public class Minigame2Activity extends AppCompatActivity {
             };
 
             failureNotificationHandler.postDelayed(failureNotificationRunnable, 3000);
-
+            goldStarsPressed = 0;
 
         }
         else {
