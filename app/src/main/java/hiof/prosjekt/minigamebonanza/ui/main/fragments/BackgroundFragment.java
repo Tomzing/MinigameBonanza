@@ -16,8 +16,8 @@ import hiof.prosjekt.minigamebonanza.ui.main.BackgroundViewModel;
 public class BackgroundFragment extends Fragment {
     private BackgroundViewModel mViewModel;
 
-    public static BackgroundFragment newInstance() {
-        return new BackgroundFragment();
+    public static ResultsFragment newInstance() {
+        return new ResultsFragment();
     }
 
     @Override

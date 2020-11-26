@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:outlineProvider="background"
-    >
+    android:outlineProvider="background">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.constraintlayout.motion.widget.MotionLayout
         android:id="@+id/appbar"
 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimaryDark"
-        android:elevation="200dp">
+        android:elevation="20dp"
+        android:outlineAmbientShadowColor="#000000"
+        android:outlineSpotShadowColor="#000000"
+        app:layoutDescription="@xml/fragment_minigame_status_xml_appbar_scene">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/collapsingToolbarLayout"
@@ -23,6 +25,7 @@
 
             android:layout_marginStart="4dp"
             android:layout_marginTop="27dp"
+            android:elevation="100dp"
             app:contentScrim="?attr/colorPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -106,7 +109,7 @@
                 tools:text="00" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.motion.widget.MotionLayout>
 
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</FrameLayout>

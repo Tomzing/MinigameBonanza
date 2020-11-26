@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <fragment
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment2"
         android:name="hiof.prosjekt.minigamebonanza.ui.main.fragments.MinigameStatusbarFragment"
         android:layout_width="match_parent"

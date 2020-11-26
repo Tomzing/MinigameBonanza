@@ -9,7 +9,7 @@
     app:layoutDescription="@xml/fragment_failurenotification_scene">
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/messageTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#FB8D8D"
@@ -19,7 +19,7 @@
         android:shadowDx="-2"
         android:shadowDy="-2"
         android:shadowRadius="1000"
-        android:text="You failed. Restarting minigame..."
+        android:text="@string/minigame_status_error_message"
         android:textSize="36sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"

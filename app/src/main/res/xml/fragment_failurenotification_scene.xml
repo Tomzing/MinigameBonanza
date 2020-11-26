@@ -12,12 +12,12 @@
             motion:layout_constraintBottom_toBottomOf="parent"
             motion:layout_constraintEnd_toEndOf="parent"
             android:layout_width="wrap_content"
-            android:id="@+id/textView5" />
+            android:id="@+id/messageTextView" />
     </ConstraintSet>
 
     <ConstraintSet android:id="@+id/end">
         <Constraint
-            android:id="@+id/textView5"
+            android:id="@+id/messageTextView"
             motion:layout_constraintEnd_toEndOf="parent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

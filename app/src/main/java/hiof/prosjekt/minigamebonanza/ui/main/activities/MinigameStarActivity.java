@@ -8,7 +8,6 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.media.AudioAttributes;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -20,66 +19,28 @@ import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 
 import hiof.prosjekt.minigamebonanza.R;
 import hiof.prosjekt.minigamebonanza.data.model.Minigame;
-import hiof.prosjekt.minigamebonanza.ui.main.fragments.FailureNotificationFragment;
+import hiof.prosjekt.minigamebonanza.ui.main.fragments.MinigameStatusNotificationFragment;
 import hiof.prosjekt.minigamebonanza.ui.main.fragments.MinigameStarFragment;
 import hiof.prosjekt.minigamebonanza.ui.main.fragments.PreMinigameFragment;
 import hiof.prosjekt.minigamebonanza.ui.main.utility.MinigameUtility;
 import hiof.prosjekt.minigamebonanza.ui.main.viewmodel.StatusbarViewModel;
 
 
-public class Minigame2Activity extends AppCompatActivity {
+public class MinigameStarActivity extends AppCompatActivity {
 
-    Minigame minigame1 = new Minigame(2,"Test Minigame","Press all the golden stars in order to succeed",10);
+    Minigame minigame = new Minigame(2,"Test Minigame", "Placeholder",10);
     public final static ArrayList<Integer> COMPLETED_MINIGAMES = new ArrayList<>();
     int runOnce = 0;
     boolean isRunning = false;
     int goldStarsPressed = 0;
 
     TextView timeRemainingText, timeRemainingNmbr, pointsText, attemptsRemainingText, minigameDescText;
-    Runnable minigameRunnable = new Runnable() {
-        public void run() {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container, MinigameStarFragment.newInstance())
-                    .commitNow();
-
-            initMinigameView();
-            startMinigameTimer();
-            isRunning = true;
-            Log.i("tag", "This'll run 3000 milliseconds later");
-        }
-    };
-    Handler minigameHandler = new Handler();
-    CountDownTimer cdt = new CountDownTimer(minigame1.getTime()*1000, 500) {
-        public void onTick(long millisUntilFinished) {
-            // Used for formatting digit to be in 2 digits only
-            timeRemainingText = findViewById(R.id.timeRemainingText);
-            timeRemainingNmbr = findViewById(R.id.timeRemainingNmbr);
-            NumberFormat f = new DecimalFormat("0");
-            long hour = (millisUntilFinished / 3600000) % 24;
-            long min = (millisUntilFinished / 60000) % 60;
-            long sec = (millisUntilFinished / 1000) % 60;
-            timeRemainingNmbr.setText(f.format(sec));
-            if(Integer.parseInt(f.format(sec)) <  4) {
-                timeRemainingText.setTextColor(Color.RED);
-                timeRemainingNmbr.setTextColor(Color.RED);
-            }
-            else if(Integer.parseInt(f.format(sec)) == 0) {
-                timeRemainingText.setText("Failure");
-            }
-        }
-        // When timer is done, run this. This'll be a failure condition
-        public void onFinish() {
-            //timeRemainingNmbr.setText("Dang");
-            failMinigame();
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,13 +58,39 @@ public class Minigame2Activity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_FULLSCREEN);
 
+
+        minigame = new Minigame(2,"Star Minigame", getResources().getString(R.string.minigame_star_description),10);
         startMinigame();
     }
+
+    Handler minigameHandler = new Handler();
+    CountDownTimer cdt = new CountDownTimer(minigame.getTime()*1000, 500) {
+        public void onTick(long millisUntilFinished) {
+            // Used for formatting digit to be in 2 digits only
+            timeRemainingText = findViewById(R.id.timeRemainingText);
+            timeRemainingNmbr = findViewById(R.id.timeRemainingNmbr);
+            NumberFormat f = new DecimalFormat("0");
+            long sec = (millisUntilFinished / 1000) % 60;
+            timeRemainingNmbr.setText(f.format(sec));
+            if(Integer.parseInt(f.format(sec)) <  4) {
+                timeRemainingText.setTextColor(Color.RED);
+                timeRemainingNmbr.setTextColor(Color.RED);
+            }
+            else if(Integer.parseInt(f.format(sec)) == 0) {
+                timeRemainingText.setText("Failure");
+            }
+        }
+        // When timer is done, run this. This'll be a failure condition
+        public void onFinish() {
+            //timeRemainingNmbr.setText("Dang");
+            failMinigame();
+        }
+    };
 
     public void startMinigame() {
         //Before the minigame, a black box with white text explaining the minigame
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, PreMinigameFragment.newInstance(minigame1.getDescription()))
+                .replace(R.id.container, PreMinigameFragment.newInstance(minigame.getDescription()))
                 .commitNow();
 
         // Opens the actual minigame on a timer. After 3 seconds it'll start the timer
@@ -113,6 +100,31 @@ public class Minigame2Activity extends AppCompatActivity {
         else {
             minigameHandler.removeCallbacks(minigameRunnable);
             isRunning = false;
+        }
+    }
+
+    Runnable minigameRunnable = new Runnable() {
+        public void run() {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.container, MinigameStarFragment.newInstance())
+                    .commitNow();
+
+            initMinigameView();
+            startMinigameTimer();
+            isRunning = true;
+            Log.i("tag", "This'll run 3000 milliseconds later");
+        }
+    };
+
+    //Starts the minigame timer
+    public void startMinigameTimer() {
+
+        if(!isRunning) {
+            Log.i("tag","Minigame timer triggered!");
+            cdt.start();
+        }
+        else {
+            cdt.cancel();
         }
     }
 
@@ -248,29 +260,7 @@ public class Minigame2Activity extends AppCompatActivity {
                 .build();
         mediaPlayer.setAudioAttributes(audioAttributes);
         mediaPlayer.start();
-
-    }
-
-    //Starts the minigame timer
-    public void startMinigameTimer() {
-
-        if(!isRunning) {
-            Log.i("tag","Minigame timer triggered!");
-            cdt.start();
-        }
-        else {
-            cdt.cancel();
-        }
-    }
-
-    public void btnSuccess(View v) {
-        Log.i("tag", "Pressed complete minigame");
-        succeedMinigame();
-    }
-
-    public void btnFail(View v) {
-        Log.i("tag","Fail button pressed");
-        failMinigame();
+        //mediaPlayer.release();
     }
 
     public void succeedMinigame() {
@@ -279,21 +269,48 @@ public class Minigame2Activity extends AppCompatActivity {
 
         cancelMinigame();
 
-        //mViewModel.setScore(10);
-        int score = MinigameUtility.calculatePoints(minigame1.getTime(), Integer.parseInt((String) timeRemainingNmbr.getText()));
+        int score = MinigameUtility.calculatePoints(minigame.getTime(), Integer.parseInt((String) timeRemainingNmbr.getText()));
         mViewModel.setScore(score);
 
-        Intent intent = new Intent(getApplicationContext(), ResultsActivity.class);
-        Bundle extras = new Bundle();
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.container, MinigameStatusNotificationFragment.newInstance(false))
+                .commitNow();
 
-        extras.putInt("ATTEMPTS_REMAINING", Integer.parseInt(mViewModel.getAttemptsRemaining()));
-        extras.putInt("SCORE", Integer.parseInt(mViewModel.getScore()));
-        extras.putIntegerArrayList("COMPLETED_MINIGAMES", COMPLETED_MINIGAMES);
-        intent.putExtras(extras);
-        startActivity(intent);
+        successNotificationHandler.postDelayed(successNotificationRunnable, 3000);
+
 
         //TODO implement method for going to next minigame, if no minigames left go to results screen
     }
+
+    Handler successNotificationHandler = new Handler();
+    Runnable successNotificationRunnable = new Runnable() {
+        public void run() {
+            StatusbarViewModel mViewModel = getStatusBarViewmodel();
+
+            Intent intent = new Intent(getApplicationContext(), MinigameShakeActivity.class);
+            Bundle extras = new Bundle();
+
+            extras.putInt("ATTEMPTS_REMAINING", Integer.parseInt(mViewModel.getAttemptsRemaining()));
+            extras.putInt("SCORE", Integer.parseInt(mViewModel.getScore()));
+            extras.putIntegerArrayList("COMPLETED_MINIGAMES", COMPLETED_MINIGAMES);
+            intent.putExtras(extras);
+            startActivity(intent);
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            cancelMinigame();
+        }
+    };
+
+    // A quick and dirty workaround to get the viewmodel within a runnable
+    public StatusbarViewModel getStatusBarViewmodel() {
+        return new ViewModelProvider(this).get(StatusbarViewModel.class);
+    }
+
+    Handler failureNotificationHandler = new Handler();
+    Runnable failureNotificationRunnable = new Runnable() {
+        public void run() {
+            startMinigame();
+        }
+    };
 
     // Method for failing a minigame
     public void failMinigame() {
@@ -308,18 +325,12 @@ public class Minigame2Activity extends AppCompatActivity {
             mViewModel.setAttemptsReamining(Integer.parseInt(mViewModel.getAttemptsRemaining())-1);
 
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, FailureNotificationFragment.newInstance())
+                    .add(R.id.container, MinigameStatusNotificationFragment.newInstance(true))
                     .commitNow();
 
             //Handler to restart the minigame, after having shown the failure notification on-screen
-            Handler failureNotificationHandler = new Handler();
-            Runnable failureNotificationRunnable = new Runnable() {
-                public void run() {
-                    startMinigame();
-                }
-            };
-
             failureNotificationHandler.postDelayed(failureNotificationRunnable, 3000);
+
             goldStarsPressed = 0;
 
         }
@@ -336,11 +347,15 @@ public class Minigame2Activity extends AppCompatActivity {
             extras.putIntegerArrayList("COMPLETED_MINIGAMES", COMPLETED_MINIGAMES);
             intent.putExtras(extras);
             startActivity(intent);
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         }
     }
 
+    // Remove the callbacks from the threads in order to stop potential exceptions
     public void cancelMinigame() {
         minigameHandler.removeCallbacks(minigameRunnable);
+        failureNotificationHandler.removeCallbacks(failureNotificationRunnable);
+        successNotificationHandler.removeCallbacks(successNotificationRunnable);
         isRunning = false;
         cdt.cancel();
     }
@@ -351,6 +366,7 @@ public class Minigame2Activity extends AppCompatActivity {
         cancelMinigame();
         Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
         startActivity(intent);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
     // When activity is destroyed, remove callbacks and cancel the timer in order to prevent crashes

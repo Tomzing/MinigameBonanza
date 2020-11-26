@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/motionLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:elevation="10dp"
+    app:layoutDescription="@xml/fragment_input_name_scene">
+
+    <EditText
+        android:id="@+id/editTextPersonName"
+        android:layout_width="273dp"
+        android:layout_height="75dp"
+        android:background="@color/colorPrimaryDark"
+        android:backgroundTint="@color/colorPrimary"
+        android:elevation="10dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:outlineAmbientShadowColor="#000000"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:shadowRadius="10"
+        android:text="Name"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.motion.widget.MotionLayout>

@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModelProvider;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
+import android.media.AudioAttributes;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -19,27 +21,25 @@ import java.util.ArrayList;
 
 import hiof.prosjekt.minigamebonanza.R;
 import hiof.prosjekt.minigamebonanza.data.model.Minigame;
-import hiof.prosjekt.minigamebonanza.ui.main.fragments.Minigame1Fragment;
+import hiof.prosjekt.minigamebonanza.ui.main.fragments.MinigameStatusNotificationFragment;
+import hiof.prosjekt.minigamebonanza.ui.main.fragments.MinigameStarFragment;
 import hiof.prosjekt.minigamebonanza.ui.main.fragments.PreMinigameFragment;
 import hiof.prosjekt.minigamebonanza.ui.main.utility.MinigameUtility;
 import hiof.prosjekt.minigamebonanza.ui.main.viewmodel.StatusbarViewModel;
 
 
-public class Minigame1Activity extends AppCompatActivity {
+public class MinigameSkeletonActivity extends AppCompatActivity {
 
-    Minigame minigame1 = new Minigame(1,"Test Minigame","Quickly press the button to cheat your way to victory",10);
+    Minigame minigame1 = new Minigame(3,"Skeleton minigame","Press all the golden stars in order to succeed",40);
     public final static ArrayList<Integer> COMPLETED_MINIGAMES = new ArrayList<>();
     int runOnce = 0;
     boolean isRunning = false;
 
-
     TextView timeRemainingText, timeRemainingNmbr, pointsText, attemptsRemainingText, minigameDescText;
-
-    // Inserts the fragment with the minigame into the view
     Runnable minigameRunnable = new Runnable() {
         public void run() {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container, Minigame1Fragment.newInstance())
+                    .replace(R.id.container, MinigameStarFragment.newInstance())
                     .commitNow();
 
             initMinigameView();
@@ -55,8 +55,6 @@ public class Minigame1Activity extends AppCompatActivity {
             timeRemainingText = findViewById(R.id.timeRemainingText);
             timeRemainingNmbr = findViewById(R.id.timeRemainingNmbr);
             NumberFormat f = new DecimalFormat("0");
-            long hour = (millisUntilFinished / 3600000) % 24;
-            long min = (millisUntilFinished / 60000) % 60;
             long sec = (millisUntilFinished / 1000) % 60;
             timeRemainingNmbr.setText(f.format(sec));
             if(Integer.parseInt(f.format(sec)) <  4) {
@@ -73,37 +71,6 @@ public class Minigame1Activity extends AppCompatActivity {
             failMinigame();
         }
     };
-
-    public void initMinigameView() {
-
-        StatusbarViewModel mViewModel = new ViewModelProvider(this).get(StatusbarViewModel.class);
-
-        Intent prevIntent = getIntent();
-        Bundle extras = prevIntent.getExtras();
-        int attemptsRemaining = extras.getInt("ATTEMPTS_REMAINING");
-        int score = extras.getInt("SCORE");
-
-        // Points and attempts remaining gets information from the extras put into the intent
-        if(runOnce == 0) {
-            runOnce = 1;
-            mViewModel.setScore(score);
-            mViewModel.setAttemptsReamining(attemptsRemaining);
-
-            attemptsRemainingText = findViewById(R.id.attemptsRemainingText);
-            attemptsRemainingText.append(" " + mViewModel.getAttemptsRemaining());
-
-            pointsText = findViewById((R.id.pointsText));
-            pointsText.setText(mViewModel.getScore());
-        }
-        // Already extracted information from extras put into intent, use viewmodel instead
-        else {
-            attemptsRemainingText = findViewById(R.id.attemptsRemainingText);
-            attemptsRemainingText.append(" " + mViewModel.getAttemptsRemaining());
-
-            pointsText = findViewById((R.id.pointsText));
-            pointsText.setText(mViewModel.getScore());
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,6 +107,50 @@ public class Minigame1Activity extends AppCompatActivity {
         }
     }
 
+    // Initializes the minigame into the view
+    public void initMinigameView() {
+
+        StatusbarViewModel mViewModel = new ViewModelProvider(this).get(StatusbarViewModel.class);
+
+        Intent prevIntent = getIntent();
+        Bundle extras = prevIntent.getExtras();
+        int attemptsRemaining = extras.getInt("ATTEMPTS_REMAINING");
+        int score = extras.getInt("SCORE");
+
+        // Points and attempts remaining gets information from the extras put into the intent
+        if(runOnce == 0) {
+            runOnce = 1;
+            mViewModel.setScore(score);
+            mViewModel.setAttemptsReamining(attemptsRemaining);
+
+            attemptsRemainingText = findViewById(R.id.attemptsRemainingText);
+            attemptsRemainingText.append(" " + mViewModel.getAttemptsRemaining());
+
+            pointsText = findViewById((R.id.pointsText));
+            pointsText.setText(mViewModel.getScore());
+        }
+        // Already extracted information from extras put into intent, use viewmodel instead
+        else {
+            attemptsRemainingText = findViewById(R.id.attemptsRemainingText);
+            attemptsRemainingText.append(" " + mViewModel.getAttemptsRemaining());
+
+            pointsText = findViewById((R.id.pointsText));
+            pointsText.setText(mViewModel.getScore());
+        }
+    }
+
+    public void dingSoundEffectPlayer() {
+
+        MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.dingsound);
+
+        AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .setUsage(AudioAttributes.USAGE_GAME)
+                .build();
+        mediaPlayer.setAudioAttributes(audioAttributes);
+        mediaPlayer.start();
+    }
+
     //Starts the minigame timer
     public void startMinigameTimer() {
 
@@ -168,11 +179,11 @@ public class Minigame1Activity extends AppCompatActivity {
 
         cancelMinigame();
 
-        //mViewModel.setScore(10);
         int score = MinigameUtility.calculatePoints(minigame1.getTime(), Integer.parseInt((String) timeRemainingNmbr.getText()));
         mViewModel.setScore(score);
 
-        Intent intent = new Intent(getApplicationContext(), MinigameStarActivity.class);
+        // Edit the path of the intent to go to the next minigame
+        Intent intent = new Intent(getApplicationContext(), ResultsActivity.class);
         Bundle extras = new Bundle();
 
         extras.putInt("ATTEMPTS_REMAINING", Integer.parseInt(mViewModel.getAttemptsRemaining()));
@@ -196,7 +207,20 @@ public class Minigame1Activity extends AppCompatActivity {
 
             mViewModel.setAttemptsReamining(Integer.parseInt(mViewModel.getAttemptsRemaining())-1);
 
-            startMinigame();
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.container, MinigameStatusNotificationFragment.newInstance(false))
+                    .commitNow();
+
+            //Handler to restart the minigame, after having shown the failure notification on-screen
+            Handler failureNotificationHandler = new Handler();
+            Runnable failureNotificationRunnable = new Runnable() {
+                public void run() {
+                    startMinigame();
+                }
+            };
+
+            failureNotificationHandler.postDelayed(failureNotificationRunnable, 3000);
+
         }
         else {
             Log.i("tag","No attempts remaining, go to results screen");

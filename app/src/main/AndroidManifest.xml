@@ -1,20 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="hiof.prosjekt.minigamebonanza">
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:screenOrientation="landscape"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:networkSecurityConfig="@xml/network_security_config"
         >
         <activity
             android:name=".ui.main.activities.ResultsActivity"
+
             android:label="ResultsActivity"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
+            android:theme="@style/FullscreenTheme"
             />
         <activity
             android:name=".ui.main.activities.SettingsActivity"
@@ -31,14 +34,21 @@
             android:screenOrientation="landscape"
             android:theme="@style/FullscreenTheme" />
         <activity
-            android:name=".ui.main.activities.Minigame2Activity"
+            android:name=".ui.main.activities.MinigameStarActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_minigame1"
+            android:screenOrientation="landscape"
+            android:theme="@style/FullscreenTheme" />
+        <activity
+            android:name=".ui.main.activities.MinigameShakeActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_minigame1"
             android:screenOrientation="landscape"
             android:theme="@style/FullscreenTheme" />
         <activity
             android:name=".ui.main.activities.MainMenuActivity"
-            android:screenOrientation="landscape">
+            android:screenOrientation="landscape"
+            android:theme="@style/FullscreenTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

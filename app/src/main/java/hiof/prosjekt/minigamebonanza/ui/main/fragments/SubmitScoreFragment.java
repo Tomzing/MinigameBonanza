@@ -15,12 +15,10 @@ import android.view.ViewGroup;
 import hiof.prosjekt.minigamebonanza.R;
 import hiof.prosjekt.minigamebonanza.ui.main.Minigame1ViewModel;
 
-public class MainFragment extends Fragment  {
+public class SubmitScoreFragment extends Fragment  {
 
-    private Minigame1ViewModel mViewModel;
-
-    public static MainFragment newInstance() {
-        return new MainFragment();
+    public static SubmitScoreFragment newInstance() {
+        return new SubmitScoreFragment();
     }
 
     @Nullable
@@ -29,14 +27,12 @@ public class MainFragment extends Fragment  {
                              @Nullable Bundle savedInstanceState) {
 
 
-        return inflater.inflate(R.layout.fragment_mainmenu, container, false);
+        return inflater.inflate(R.layout.fragment_input_name, container, false);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = ViewModelProviders.of(this).get(Minigame1ViewModel.class);
-        // TODO: Use the ViewModel
     }
 
 }

@@ -1,13 +1,13 @@
 package hiof.prosjekt.minigamebonanza.ui.main.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.motion.widget.MotionLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.transition.Explode;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 
 import java.util.ArrayList;
 
@@ -70,7 +70,9 @@ public class MainMenuActivity extends AppCompatActivity {
 
     public void startGameOnclick(View v) {
         Log.i(TAG, "Trykket på startgame");
-        Intent intent = new Intent(getApplicationContext(), Minigame2Activity.class);
+        //Intent intent = new Intent(getApplicationContext(), MinigameStarActivity.class);
+        Intent intent = new Intent(getApplicationContext(), ResultsActivity.class);
+        //Intent intent = new Intent(getApplicationContext(), MinigameShakeActivity.class);
         Minigame minigame1 = new Minigame(1,"Test Minigame","Quickly press the button to cheat your way to victory",10);
 
         //MotionLayout motionLayout = v.findViewById(R.id.startGamePressed);
@@ -84,6 +86,7 @@ public class MainMenuActivity extends AppCompatActivity {
         extras.putIntegerArrayList("COMPLETED_MINIGAMES", COMPLETED_MINIGAMES);
         intent.putExtras(extras);
         startActivity(intent);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
     public void startSettingsOnClick(View v) {
@@ -105,7 +108,7 @@ public class MainMenuActivity extends AppCompatActivity {
         }
     }
 
-    public void quitAppOnClick(View v) {
+    public void quitBtnOnClick(View v) {
         finish();
     }
 
