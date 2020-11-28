@@ -29,10 +29,10 @@
         android:rotationY="-23"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.96"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.15"
+        app:layout_constraintVertical_bias="0.224"
         app:srcCompat="@drawable/gold_star" />
 
     <ImageView
@@ -42,10 +42,10 @@
         android:rotation="-115"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.817"
+        app:layout_constraintHorizontal_bias="0.887"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.414"
+        app:layout_constraintVertical_bias="0.636"
         app:srcCompat="@drawable/gold_star" />
 
     <ImageView
@@ -54,10 +54,10 @@
         android:layout_height="114dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.473"
+        app:layout_constraintHorizontal_bias="0.682"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.128"
+        app:layout_constraintVertical_bias="0.269"
         app:srcCompat="@drawable/purple_star" />
 
     <ImageView
@@ -67,10 +67,10 @@
         android:rotationX="-2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.071"
+        app:layout_constraintHorizontal_bias="0.281"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.483"
+        app:layout_constraintVertical_bias="0.256"
         app:srcCompat="@drawable/gold_star" />
 
     <ImageView
@@ -81,10 +81,10 @@
         android:rotationY="15"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.782"
+        app:layout_constraintHorizontal_bias="0.421"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.932"
+        app:layout_constraintVertical_bias="0.801"
         app:srcCompat="@drawable/purple_star" />
 
     <ImageView

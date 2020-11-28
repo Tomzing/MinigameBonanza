@@ -4,12 +4,15 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
 
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -28,6 +31,8 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 
 import hiof.prosjekt.minigamebonanza.R;
+import hiof.prosjekt.minigamebonanza.ui.main.utility.NotificationBuilder;
+import hiof.prosjekt.minigamebonanza.ui.main.utility.NotificationChannelCreator;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static java.util.List.of;
@@ -39,7 +44,7 @@ public class ResultsActivity extends AppCompatActivity {
     int REQUESTED_PERMISSION = 1;
     EditText inputName;
     String inputNameString = "";
-
+    boolean showNotification;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +66,7 @@ public class ResultsActivity extends AppCompatActivity {
                         // Hide the nav bar and status bar
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_FULLSCREEN);
+        showNotification = true;
         initResultsView();
     }
 
@@ -77,7 +83,7 @@ public class ResultsActivity extends AppCompatActivity {
         attemptsResultsText.setText(String.valueOf(attemptsRemaining));
     }
 
-    @Override
+    /*@Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
@@ -91,7 +97,7 @@ public class ResultsActivity extends AppCompatActivity {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             Toast.makeText(this, "portrait", Toast.LENGTH_SHORT).show();
         }
-    }
+    }*/
 
     public void submitScoreBtn(View view){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
@@ -170,29 +176,13 @@ public class ResultsActivity extends AppCompatActivity {
             outputWriter.close();
 
             System.out.println("SAVED TO DIR: " + file.getAbsolutePath());
-            Toast.makeText(ResultsActivity.this,"Something has been saved",Toast.LENGTH_LONG).show();
+            Toast.makeText(ResultsActivity.this,"Your score has been saved " + name,Toast.LENGTH_LONG).show();
 
-            //FileOutputStream fileOutputStream = new FileOutputStream(file);
-            //FileOutputStream.write(inputNameString + seperator + scoreResultsText + seperator + attemptsResultsText)
         }  catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-
-    /*private ActivityResultLauncher<String> requestPermissionLauncher =
-            registerForActivityResult(new RequestPermission(), isGranted -> {
-                if (isGranted) {
-                    // Permission is granted. Continue the action or workflow in your
-                    // app.
-                } else {
-                    // Explain to the user that the feature is unavailable because the
-                    // features requires a permission that the user has denied. At the
-                    // same time, respect the user's decision. Don't link to system
-                    // settings in an effort to convince the user to change their
-                    // decision.
-                }
-            });*/
 
     private void requestPermissions() throws FileNotFoundException {
         if (ContextCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
@@ -201,7 +191,7 @@ public class ResultsActivity extends AppCompatActivity {
             writeScoreToInternalStorage();
 
         }
-        else if (shouldShowRequestPermissionRationale(WRITE_EXTERNAL_STORAGE)) {
+        else  {
 
             Toast.makeText(ResultsActivity.this,"In order to store your score on your phone, the app needs the ability to write to your phone's storage.",Toast.LENGTH_LONG).show();
             ActivityCompat.requestPermissions(this,
@@ -210,35 +200,31 @@ public class ResultsActivity extends AppCompatActivity {
         }
     }
 
-    /*public void submitScoreBtn(View v) {
+    @Override
+    public void onResume() {
+        super.onResume();
+        showNotification = true;
+    }
 
-        InputNameDialogFragment dialog = new InputNameDialogFragment();
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.container, InputNameDialogFragment.newInstance())
-                .commitNow();
-        /*
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+    @Override
+    public void onPause() {
+        super.onPause();
 
-        SubmitScoreFragment submitScoreFragment = new SubmitScoreFragment();
+        SharedPreferences sharedPreference = getSharedPreferences("hiof.prosjekt.minigamebonanza_preferences", MODE_PRIVATE);
 
-        if(submitBtnActive == 0) {
-            submitBtnActive = 1;
-            fragmentTransaction.add(R.id.container, submitScoreFragment);
+        NotificationChannelCreator.createNotificationChannel(this);
+
+        // Check if the notification is supposed to be showing and wether user has set notifications
+        // on or not. This is true by default. I'm sorry.
+        if(showNotification && sharedPreference.getBoolean("notification", true)) {
+            NotificationBuilder.createNotificationBuilder(this);
         }
-        else {
-            submitBtnActive = 0;
-            fragmentTransaction.remove(submitScoreFragment);
-        }
-
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
-
-    }*/
+    }
 
 
     @Override
     public void onBackPressed() {
+        showNotification = false;
         Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
         startActivity(intent);
     }

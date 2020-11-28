@@ -3,8 +3,10 @@ package hiof.prosjekt.minigamebonanza.ui.main.activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.media.AudioAttributes;
 import android.media.MediaPlayer;
@@ -27,6 +29,7 @@ import hiof.prosjekt.minigamebonanza.R;
 import hiof.prosjekt.minigamebonanza.data.model.Minigame;
 import hiof.prosjekt.minigamebonanza.ui.main.fragments.MinigameStatusNotificationFragment;
 import hiof.prosjekt.minigamebonanza.ui.main.fragments.MinigameStarFragment;
+import hiof.prosjekt.minigamebonanza.ui.main.fragments.MinigameStatusbarFragment;
 import hiof.prosjekt.minigamebonanza.ui.main.fragments.PreMinigameFragment;
 import hiof.prosjekt.minigamebonanza.ui.main.utility.MinigameUtility;
 import hiof.prosjekt.minigamebonanza.ui.main.viewmodel.StatusbarViewModel;
@@ -47,7 +50,7 @@ public class MinigameStarActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_background);
 
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(
@@ -57,6 +60,15 @@ public class MinigameStarActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_FULLSCREEN);
+
+        int currentOrientation = this.getResources().getConfiguration().orientation;
+        // Handles the orientation based on the orientation when the minigame is started
+        if(currentOrientation == Configuration.ORIENTATION_PORTRAIT) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
+        else if(currentOrientation == Configuration.ORIENTATION_LANDSCAPE){
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }
 
 
         minigame = new Minigame(2,"Star Minigame", getResources().getString(R.string.minigame_star_description),10);
@@ -88,6 +100,7 @@ public class MinigameStarActivity extends AppCompatActivity {
     };
 
     public void startMinigame() {
+
         //Before the minigame, a black box with white text explaining the minigame
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, PreMinigameFragment.newInstance(minigame.getDescription()))
@@ -107,6 +120,10 @@ public class MinigameStarActivity extends AppCompatActivity {
         public void run() {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.container, MinigameStarFragment.newInstance())
+                    .commitNow();
+
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.container, MinigameStatusbarFragment.newInstance())
                     .commitNow();
 
             initMinigameView();

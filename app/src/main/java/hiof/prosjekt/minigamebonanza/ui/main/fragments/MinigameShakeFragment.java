@@ -14,11 +14,11 @@ import androidx.lifecycle.ViewModelProviders;
 import hiof.prosjekt.minigamebonanza.R;
 import hiof.prosjekt.minigamebonanza.ui.main.Minigame1ViewModel;
 
-public class MinigameBlankFragment extends Fragment {
+public class MinigameShakeFragment extends Fragment {
     private Minigame1ViewModel mViewModel;
 
-    public static MinigameBlankFragment newInstance() {
-        return new MinigameBlankFragment();
+    public static MinigameShakeFragment newInstance() {
+        return new MinigameShakeFragment();
     }
 
     @Nullable
@@ -26,7 +26,7 @@ public class MinigameBlankFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        return inflater.inflate(R.layout.fragment_minigame_blank, container, false);
+        return inflater.inflate(R.layout.fragment_minigame_shake, container, false);
     }
 
     @Override

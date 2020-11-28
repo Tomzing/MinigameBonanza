@@ -27,7 +27,8 @@ import java.util.ArrayList;
 import hiof.prosjekt.minigamebonanza.R;
 import hiof.prosjekt.minigamebonanza.data.model.Minigame;
 import hiof.prosjekt.minigamebonanza.ui.main.fragments.MinigameStatusNotificationFragment;
-import hiof.prosjekt.minigamebonanza.ui.main.fragments.MinigameBlankFragment;
+import hiof.prosjekt.minigamebonanza.ui.main.fragments.MinigameShakeFragment;
+import hiof.prosjekt.minigamebonanza.ui.main.fragments.MinigameStatusbarFragment;
 import hiof.prosjekt.minigamebonanza.ui.main.fragments.PreMinigameFragment;
 import hiof.prosjekt.minigamebonanza.ui.main.utility.MinigameUtility;
 import hiof.prosjekt.minigamebonanza.ui.main.viewmodel.StatusbarViewModel;
@@ -35,7 +36,7 @@ import hiof.prosjekt.minigamebonanza.ui.main.viewmodel.StatusbarViewModel;
 
 public class MinigameShakeActivity extends AppCompatActivity implements ShakeDetector.Listener{
 
-    Minigame minigame = new Minigame(3,"Ball minigame","Shake your phone 10 times",20);
+    Minigame minigame = new Minigame(3,"Shake minigame","Shake your phone 10 times",20);
     public final static ArrayList<Integer> COMPLETED_MINIGAMES = new ArrayList<>();
     int runOnce = 0;
     boolean isRunning = false;
@@ -70,7 +71,11 @@ public class MinigameShakeActivity extends AppCompatActivity implements ShakeDet
     Runnable minigameRunnable = new Runnable() {
         public void run() {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container, MinigameBlankFragment.newInstance())
+                    .replace(R.id.container, MinigameShakeFragment.newInstance())
+                    .commitNow();
+
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.container, MinigameStatusbarFragment.newInstance())
                     .commitNow();
 
             initMinigameView();
@@ -167,6 +172,9 @@ public class MinigameShakeActivity extends AppCompatActivity implements ShakeDet
             sd.setSensitivity(ShakeDetector.SENSITIVITY_LIGHT);
             sd.start(sensorManager);
         }
+        // If user doesn't have a working gyroscope sensor, succeed. This is unfair since it'll give players
+        // without a gyroscope an automatic completion with full points due to having spent 0 seconds completing
+        // the minigame. Further development required.
         else {
             succeedMinigame();
         }
