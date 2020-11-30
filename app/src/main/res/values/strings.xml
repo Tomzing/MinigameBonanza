@@ -16,8 +16,8 @@
     <string name="notification_short_description">In order to free up resources and save on battery life…</string>
     <string name="notification_long_description">In order to free up resources and save on battery life, consider terminating the app Minigame Bonanza"</string>
     <!-- Preference Titles -->
-    <string name="notification_settings_title">Disable notifications?</string>
-    <string name="notification_summary">Do you want notifications that tells you if the app is running in the background?</string>
+    <string name="notification_settings_title">Turn on notifications?</string>
+    <string name="notification_summary">Check this if you want notifications that tells you if the app is running in the background</string>
     <string name="choose_language">Choose language</string>
     <string name="choose_language_summary">Choose the language you wish the app to be using</string>
     <string name="norwegian">Norwegian</string>
