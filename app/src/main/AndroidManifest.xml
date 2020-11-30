@@ -3,6 +3,8 @@
     package="hiof.prosjekt.minigamebonanza">
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:label="@string/app_name"
@@ -25,7 +27,7 @@
         <activity
             android:name=".ui.main.activities.LeaderboardActivity"
             android:label="LeaderboardActivity"
-            android:screenOrientation="landscape" />
+            />
         <activity
             android:name=".ui.main.activities.Minigame1Activity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -34,6 +36,11 @@
             android:theme="@style/FullscreenTheme" />
         <activity
             android:name=".ui.main.activities.MinigameStarActivity"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
+            android:label="@string/title_activity_minigame1"
+            android:theme="@style/FullscreenTheme" />
+        <activity
+            android:name=".ui.main.activities.MinigameLocationActivity"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
             android:label="@string/title_activity_minigame1"
             android:theme="@style/FullscreenTheme" />

@@ -5,14 +5,7 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Build;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
-
-import hiof.prosjekt.minigamebonanza.R;
-
-import static androidx.core.content.ContextCompat.getSystemService;
 
 public class NotificationChannelCreator extends ActivityCompat {
 

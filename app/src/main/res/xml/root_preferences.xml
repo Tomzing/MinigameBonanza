@@ -7,7 +7,11 @@
             android:defaultValue="true"
             android:key="notification"
             android:summary="@string/notification_summary"
-            android:title="@string/notifications" />
+            android:title="@string/notification_settings_title" />
+        <CheckBoxPreference
+            android:key="muteSoundFx"
+            android:summary="@string/mute_soundeffect_summary"
+            android:title="@string/mute_soundeffect_title" />
         <ListPreference
             android:entries="@array/language_entries"
             android:entryValues="@array/language_values"

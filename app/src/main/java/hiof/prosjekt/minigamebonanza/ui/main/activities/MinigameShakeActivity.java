@@ -5,7 +5,9 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
@@ -31,16 +33,19 @@ import hiof.prosjekt.minigamebonanza.ui.main.fragments.MinigameShakeFragment;
 import hiof.prosjekt.minigamebonanza.ui.main.fragments.MinigameStatusbarFragment;
 import hiof.prosjekt.minigamebonanza.ui.main.fragments.PreMinigameFragment;
 import hiof.prosjekt.minigamebonanza.ui.main.utility.MinigameUtility;
+import hiof.prosjekt.minigamebonanza.ui.main.utility.NotificationBuilder;
+import hiof.prosjekt.minigamebonanza.ui.main.utility.NotificationChannelCreator;
 import hiof.prosjekt.minigamebonanza.ui.main.viewmodel.StatusbarViewModel;
 
 
 public class MinigameShakeActivity extends AppCompatActivity implements ShakeDetector.Listener{
 
-    Minigame minigame = new Minigame(3,"Shake minigame","Shake your phone 10 times",20);
+    Minigame minigame = new Minigame(3,"Shake minigame","Shake your phone 10 times",15);
     public final static ArrayList<Integer> COMPLETED_MINIGAMES = new ArrayList<>();
     int runOnce = 0;
     boolean isRunning = false;
     int timesShaken = 0;
+    boolean showNotification;
 
     SensorManager sensorManager;
     ShakeDetector sd;
@@ -52,8 +57,6 @@ public class MinigameShakeActivity extends AppCompatActivity implements ShakeDet
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_background);
 
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-
         View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_IMMERSIVE
@@ -62,6 +65,18 @@ public class MinigameShakeActivity extends AppCompatActivity implements ShakeDet
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_FULLSCREEN);
+
+        showNotification = true;
+
+        int currentOrientation = this.getResources().getConfiguration().orientation;
+        // Handles the orientation based on the orientation when the minigame is started.
+        // This means orientation is only changed when the activity starts
+        if(currentOrientation == Configuration.ORIENTATION_PORTRAIT) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
+        else if(currentOrientation == Configuration.ORIENTATION_LANDSCAPE){
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }
 
         minigame = new Minigame(3,"Shake minigame",getResources().getString(R.string.minigame_shake_description),20);
         startMinigame();
@@ -78,8 +93,8 @@ public class MinigameShakeActivity extends AppCompatActivity implements ShakeDet
                     .add(R.id.container, MinigameStatusbarFragment.newInstance())
                     .commitNow();
 
-            initMinigameView();
             startMinigameTimer();
+            initMinigameView();
             isRunning = true;
 
             Log.i("tag", "This'll run 3000 milliseconds later");
@@ -181,15 +196,18 @@ public class MinigameShakeActivity extends AppCompatActivity implements ShakeDet
     }
 
     public void dingSoundEffectPlayer() {
+        SharedPreferences sharedPreference = getSharedPreferences("hiof.prosjekt.minigamebonanza_preferences", MODE_PRIVATE);
+        if(!sharedPreference.getBoolean("muteSoundFx", false)) {
+            MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.dingsound2);
 
-        MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.dingsound2);
+            AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .setUsage(AudioAttributes.USAGE_GAME)
+                    .build();
+            mediaPlayer.setAudioAttributes(audioAttributes);
+            mediaPlayer.start();
+        }
 
-        AudioAttributes audioAttributes = new AudioAttributes.Builder()
-                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                .setUsage(AudioAttributes.USAGE_GAME)
-                .build();
-        mediaPlayer.setAudioAttributes(audioAttributes);
-        mediaPlayer.start();
     }
 
     //Starts the minigame timer
@@ -227,7 +245,9 @@ public class MinigameShakeActivity extends AppCompatActivity implements ShakeDet
         public void run() {
             StatusbarViewModel mViewModel = getStatusBarViewmodel();
 
-            Intent intent = new Intent(getApplicationContext(), ResultsActivity.class);
+            showNotification = false;
+
+            Intent intent = new Intent(getApplicationContext(), MinigameLocationActivity.class);
             Bundle extras = new Bundle();
 
             extras.putInt("ATTEMPTS_REMAINING", Integer.parseInt(mViewModel.getAttemptsRemaining()));
@@ -278,7 +298,9 @@ public class MinigameShakeActivity extends AppCompatActivity implements ShakeDet
 
             cancelMinigame();
 
-            Intent intent = new Intent(getApplicationContext(), ResultsActivity.class);
+            showNotification = false;
+
+            Intent intent = new Intent(getApplicationContext(), MinigameLocationActivity.class);
             Bundle extras = new Bundle();
 
             extras.putInt("ATTEMPTS_REMAINING", Integer.parseInt(mViewModel.getAttemptsRemaining()));
@@ -299,15 +321,31 @@ public class MinigameShakeActivity extends AppCompatActivity implements ShakeDet
     }
 
     @Override
-    protected void onPause() {
+    public void onResume() {
+        super.onResume();
+        showNotification = true;
+    }
 
+    @Override
+    public void onPause() {
         super.onPause();
+
+        SharedPreferences sharedPreference = getSharedPreferences("hiof.prosjekt.minigamebonanza_preferences", MODE_PRIVATE);
+
+        NotificationChannelCreator.createNotificationChannel(this);
+
+        // Check if the notification is supposed to be showing and wether user has set notifications
+        // on or not. This is true by default. I'm sorry.
+        if(showNotification && sharedPreference.getBoolean("notification", true)) {
+            NotificationBuilder.createNotificationBuilder(this);
+        }
     }
 
     // When user presses back, ensures the back button goes to main menu instead of previous minigame, if applicable
     @Override
     public void onBackPressed() {
         cancelMinigame();
+        showNotification = false;
         Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
         startActivity(intent);
     }

@@ -2,16 +2,20 @@ package hiof.prosjekt.minigamebonanza.ui.main.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.media.AudioAttributes;
 import android.media.MediaPlayer;
@@ -23,19 +27,28 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 import hiof.prosjekt.minigamebonanza.R;
 import hiof.prosjekt.minigamebonanza.data.model.Minigame;
+import hiof.prosjekt.minigamebonanza.ui.main.fragments.MinigameLocationFragment;
 import hiof.prosjekt.minigamebonanza.ui.main.fragments.MinigameStatusNotificationFragment;
 import hiof.prosjekt.minigamebonanza.ui.main.fragments.MinigameStarFragment;
 import hiof.prosjekt.minigamebonanza.ui.main.fragments.MinigameStatusbarFragment;
@@ -45,18 +58,23 @@ import hiof.prosjekt.minigamebonanza.ui.main.utility.NotificationBuilder;
 import hiof.prosjekt.minigamebonanza.ui.main.utility.NotificationChannelCreator;
 import hiof.prosjekt.minigamebonanza.ui.main.viewmodel.StatusbarViewModel;
 
+import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
-public class MinigameStarActivity extends AppCompatActivity {
 
-    Minigame minigame = new Minigame(2, "Test Minigame", "Placeholder", 10);
+public class MinigameLocationActivity extends AppCompatActivity {
+
+    Minigame minigame = new Minigame(2,"Test Minigame", "Placeholder",10);
     public final static ArrayList<Integer> COMPLETED_MINIGAMES = new ArrayList<>();
     int runOnce = 0;
     boolean isRunning = false;
-    int goldStarsPressed = 0;
     boolean showNotification;
+    Context context = this;
+    private FusedLocationProviderClient fusedLocationClient;
+    Location userLocation;
+    String countryCode;
 
-
-    TextView timeRemainingText, timeRemainingNmbr, pointsText, attemptsRemainingText, minigameDescText;
+    TextView timeRemainingText, pointsText, timeRemainingNmbr, attemptsRemainingText, minigameDescText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,18 +93,22 @@ public class MinigameStarActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_FULLSCREEN);
 
         int currentOrientation = this.getResources().getConfiguration().orientation;
-        // Handles the orientation based on the orientation when the minigame is started
-        if (currentOrientation == Configuration.ORIENTATION_PORTRAIT) {
+        // Handles the orientation based on the phones orientation when the minigame is started
+        if(currentOrientation == Configuration.ORIENTATION_PORTRAIT) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        } else if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+        }
+        else if(currentOrientation == Configuration.ORIENTATION_LANDSCAPE){
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         }
 
         showNotification = true;
 
-        minigame = new Minigame(2, "Star Minigame", getResources().getString(R.string.minigame_star_description), 10);
+        minigame = new Minigame(2,"Location minigame", getResources().getString(R.string.minigame_location_description),10);
         startMinigame();
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
     }
+
 
     Handler minigameHandler = new Handler();
     CountDownTimer cdt = new CountDownTimer(minigame.getTime()*1000, 500) {
@@ -127,20 +149,25 @@ public class MinigameStarActivity extends AppCompatActivity {
             minigameHandler.removeCallbacks(minigameRunnable);
             isRunning = false;
         }
+
     }
 
     Runnable minigameRunnable = new Runnable() {
         public void run() {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container, MinigameStarFragment.newInstance())
+                    .replace(R.id.container, MinigameLocationFragment.newInstance())
                     .commitNow();
 
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, MinigameStatusbarFragment.newInstance())
                     .commitNow();
 
-            initMinigameView();
             startMinigameTimer();
+            try {
+                initMinigameView();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             isRunning = true;
             Log.i("tag", "This'll run 3000 milliseconds later");
         }
@@ -159,7 +186,7 @@ public class MinigameStarActivity extends AppCompatActivity {
     }
 
     // Initializes the minigame into the view
-    public void initMinigameView() {
+    public void initMinigameView() throws IOException {
 
         StatusbarViewModel mViewModel = new ViewModelProvider(this).get(StatusbarViewModel.class);
 
@@ -173,6 +200,9 @@ public class MinigameStarActivity extends AppCompatActivity {
             runOnce = 1;
             mViewModel.setScore(score);
             mViewModel.setAttemptsReamining(attemptsRemaining);
+
+            timeRemainingNmbr = findViewById(R.id.timeRemainingNmbr);
+            timeRemainingNmbr.setText("1");
 
             attemptsRemainingText = findViewById(R.id.attemptsRemainingText);
             attemptsRemainingText.append(" " + mViewModel.getAttemptsRemaining());
@@ -189,95 +219,135 @@ public class MinigameStarActivity extends AppCompatActivity {
             pointsText.setText(mViewModel.getScore());
         }
 
-        RotateAnimation anim = new RotateAnimation(0.0f, 360.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        //fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-        anim.setInterpolator(new LinearInterpolator());
-        anim.setRepeatCount(Animation.INFINITE); //Repeat animation indefinitely
-        anim.setDuration(1000); //Put desired duration per anim cycle here, in milliseconds
-
-        ImageView goldStar1 = findViewById(R.id.goldStarImageView1);
-        goldStar1.setSoundEffectsEnabled(false);
-        goldStar1.startAnimation(anim);
-
-        goldStar1.setOnClickListener(new View.OnClickListener() {
+        System.out.println("GOOGLE ER: " + GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this));
+/*
+        LocationServices.getFusedLocationProviderClient(this).getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
-            public void onClick(View v) {
-                ImageView goldStar1 = findViewById(R.id.goldStarImageView1);
-                goldStar1.clearAnimation();
-                goldStar1.setVisibility(View.GONE);
-                goldStarsPressed++;
-                hasPlayerPressedFiveStars(goldStarsPressed, false);
-                dingSoundEffectPlayer();
+            public void onSuccess(Location location) {
+                System.out.println("IT WORKS " + location.toString());
+
+                System.out.println(location.toString());
+                List<Address> list = null;
+                try {
+                    list = new Geocoder(context).getFromLocation(location.getLatitude(), location.getLongitude(),100);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                assert list != null;
+                Address address = list.get(0);
+                String countryCode = address.getCountryCode();
+                System.out.println("COUNTRY CODE IS: " + countryCode);
+
+
+                //TODO: UI updates.
             }
-        });
+        });*/
 
-        ImageView goldStar2 = findViewById(R.id.goldStarImageView2);
-        goldStar2.setSoundEffectsEnabled(false);
-        goldStar2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ImageView goldStar2 = findViewById(R.id.goldStarImageView2);
-                goldStar2.setVisibility(View.GONE);
-                goldStarsPressed++;
-                hasPlayerPressedFiveStars(goldStarsPressed, false);
-                dingSoundEffectPlayer();
 
-            }
-        });
+        if (ContextCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this) == 0) {
+            fusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            //userLocation = location;
+                            System.out.println(location.toString());
+                            List<Address> list = null;
+                            try {
+                                list = new Geocoder(context).getFromLocation(location.getLatitude(), location.getLongitude(),1);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            assert list != null;
+                            Address address = list.get(0);
+                            countryCode = address.getCountryCode();
+                            System.out.println("COUNTRY CODE IS: " + countryCode);
 
-        ImageView goldStar3 = findViewById(R.id.goldStarImageView3);
-        goldStar3.setSoundEffectsEnabled(false);
-        goldStar3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ImageView goldStar1 = findViewById(R.id.goldStarImageView3);
-                goldStar1.setVisibility(View.GONE);
-                goldStarsPressed++;
-                hasPlayerPressedFiveStars(goldStarsPressed, false);
-                dingSoundEffectPlayer();
+                            // Got last known location. In some rare situations this can be null.
+                            if (location != null) {
+                                // Logic to handle location object
+                            }
+                        }
+                    });
+        }
+        // If the user doesn't have any GPS data with it's current approximate location,
+        // escape and succeed the minigame. This isn't fair, need to change how this is handled
+        else if(ContextCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-            }
-        });
+            Toast.makeText(this,"Sorry, cancelling this minigame due to lack of location access. Please permit this app to use your location." ,Toast.LENGTH_LONG).show();
+            ActivityCompat.requestPermissions(this,
+                    new String[] { Manifest.permission.ACCESS_COARSE_LOCATION },
+                    1);
 
-        ImageView goldStar4 = findViewById(R.id.goldStarImageView4);
-        goldStar4.setSoundEffectsEnabled(false);
-        goldStar4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ImageView goldStar4 = findViewById(R.id.goldStarImageView4);
-                goldStar4.setVisibility(View.GONE);
-                goldStarsPressed++;
-                hasPlayerPressedFiveStars(goldStarsPressed, false);
-                dingSoundEffectPlayer();
-
-            }
-        });
-
-        ImageView goldStar5 = findViewById(R.id.goldStarImageView5);
-        goldStar5.setSoundEffectsEnabled(false);
-        goldStar5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ImageView goldStar5 = findViewById(R.id.goldStarImageView5);
-                goldStar5.setVisibility(View.GONE);
-                goldStarsPressed++;
-                hasPlayerPressedFiveStars(goldStarsPressed, false);
-                dingSoundEffectPlayer();
-
-            }
-        });
-    }
-
-    public boolean hasPlayerPressedFiveStars(int goldStarsPressed, boolean isTest) {
-        if(goldStarsPressed == 5 ) {
-            if(!isTest) {
-                succeedMinigame();
-            }
-            return true;
+            succeedMinigame();
         }
         else {
-            return false;
+            Toast.makeText(this,"Google Play services might be unavailable or not updated. Please update and try again" ,Toast.LENGTH_LONG).show();
+
+            succeedMinigame();
         }
+
+        ImageView norwegianFlag = findViewById(R.id.norwayImageView);
+        norwegianFlag.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(verifyCorrectCountryCode("NO",countryCode)) {
+                    dingSoundEffectPlayer();
+                    succeedMinigame();
+                }
+
+            }
+        });
+
+        ImageView swedishFlag = findViewById(R.id.swedenImageView);
+        swedishFlag.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(verifyCorrectCountryCode("SE",countryCode)) {
+                    dingSoundEffectPlayer();
+                    succeedMinigame();
+                }
+            }
+        });
+
+        ImageView danishFlag = findViewById(R.id.denmarkImageView);
+        danishFlag.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(verifyCorrectCountryCode("DK",countryCode)) {
+                    dingSoundEffectPlayer();
+                    succeedMinigame();
+                }
+            }
+        });
+
+
+        ImageView icelandicFlag = findViewById(R.id.icelandImageView);
+        icelandicFlag.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(verifyCorrectCountryCode("IS",countryCode)) {
+                    dingSoundEffectPlayer();
+                    succeedMinigame();
+                }
+            }
+        });
+
+        Button countryNotAvailableBtn = findViewById(R.id.countryNotAvailableBtn);
+        countryNotAvailableBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!verifyCorrectCountryCode("??", countryCode)) {
+                    dingSoundEffectPlayer();
+                    succeedMinigame();
+                }
+            }
+        }) ;
+    }
+
+    public boolean verifyCorrectCountryCode(String expectedCountryCode, String actualCountryCode) {
+        return expectedCountryCode.equals(actualCountryCode);
     }
 
     public void dingSoundEffectPlayer() {
@@ -320,8 +390,9 @@ public class MinigameStarActivity extends AppCompatActivity {
         public void run() {
             StatusbarViewModel mViewModel = getStatusBarViewmodel();
 
-            Intent intent = new Intent(getApplicationContext(), MinigameShakeActivity.class);
+            Intent intent = new Intent(getApplicationContext(), ResultsActivity.class);
             Bundle extras = new Bundle();
+            intent.setFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
 
             extras.putInt("ATTEMPTS_REMAINING", Integer.parseInt(mViewModel.getAttemptsRemaining()));
             extras.putInt("SCORE", Integer.parseInt(mViewModel.getScore()));
@@ -364,8 +435,6 @@ public class MinigameStarActivity extends AppCompatActivity {
             //Handler to restart the minigame, after having shown the failure notification on-screen
             failureNotificationHandler.postDelayed(failureNotificationRunnable, 3000);
 
-            goldStarsPressed = 0;
-
         }
         else {
             Log.i("tag","No attempts remaining, go to results screen");
@@ -404,6 +473,9 @@ public class MinigameStarActivity extends AppCompatActivity {
     public void onPause() {
         super.onPause();
 
+        //cancelMinigame();
+        //Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
+        //startActivity(intent);
         SharedPreferences sharedPreference = getSharedPreferences("hiof.prosjekt.minigamebonanza_preferences", MODE_PRIVATE);
 
         NotificationChannelCreator.createNotificationChannel(this);

@@ -1,5 +1,7 @@
 package hiof.prosjekt.minigamebonanza.data.model;
 
+import androidx.annotation.NonNull;
+
 public class PlayerScore {
     String name;
     int attemptsRemaining;
@@ -33,6 +35,13 @@ public class PlayerScore {
 
     public void setScore(int score) {
         this.score = score;
+    }
+
+
+    @NonNull
+    @Override
+    public String toString() {
+        return this.getName() + " " + this.getAttemptsRemaining() + " " + this.getScore();
     }
 
 }

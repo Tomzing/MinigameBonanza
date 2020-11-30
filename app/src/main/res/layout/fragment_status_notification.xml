@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="#80000000"
     android:foregroundGravity="fill_horizontal"
+    android:clickable="true"
     app:layoutDescription="@xml/fragment_failurenotification_scene">
 
     <TextView

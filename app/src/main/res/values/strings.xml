@@ -13,21 +13,17 @@
     <string name="endless">Endless</string>
     <!-- Notification -->
     <string name="notification_title">Minigame Bonanza is running in the background</string>
-    <string name="notification_short_description">In order to free up resources and save on battery life...</string>
+    <string name="notification_short_description">In order to free up resources and save on battery life…</string>
     <string name="notification_long_description">In order to free up resources and save on battery life, consider terminating the app Minigame Bonanza"</string>
     <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
-    <string name="notifications">Notifications</string>
+    <string name="notification_settings_title">Disable notifications?</string>
     <string name="notification_summary">Do you want notifications that tells you if the app is running in the background?</string>
     <string name="choose_language">Choose language</string>
     <string name="choose_language_summary">Choose the language you wish the app to be using</string>
     <string name="norwegian">Norwegian</string>
     <string name="english">English</string>
-    <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
-
+    <string name="mute_soundeffect_title">Mute sound effect?</string>
+    <string name="mute_soundeffect_summary">Do you wish to mute the ding sound that plays whenever you do something correct within a minigame?</string>
     <!-- Sync Preferences -->
     <string name="sync_title">Sync email periodically</string>
     <string name="attachment_title">Download incoming attachments</string>
@@ -77,4 +73,7 @@
     <!-- Shake minigame strings -->
     <string name="minigame_shake_description">Shake your phone 10 times!</string>
     <string name="times_shaken">Times shaken:</string>
+    <!-- Location minigame strings -->
+    <string name="minigame_location_description">Press the flag of the country you\'re currently in!</string>
+    <string name="minigame_location_button">My country isn\'t here</string>
 </resources>
