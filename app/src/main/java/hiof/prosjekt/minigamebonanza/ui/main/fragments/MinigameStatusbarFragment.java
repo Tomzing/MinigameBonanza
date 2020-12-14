@@ -34,11 +34,6 @@ public class MinigameStatusbarFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        /*StatusbarViewModel mViewModel = ViewModelProviders.of(this).get(StatusbarViewModel.class);
-        TextView pointsText = getView().findViewById(R.id.pointsText);
-        pointsText.append(Integer.toString(mViewModel.getAttemptsRemaining()));
-         */
     }
 
     @Override

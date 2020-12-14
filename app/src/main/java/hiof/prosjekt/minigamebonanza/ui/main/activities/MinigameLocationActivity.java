@@ -219,31 +219,7 @@ public class MinigameLocationActivity extends AppCompatActivity {
             pointsText.setText(mViewModel.getScore());
         }
 
-        //fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
         System.out.println("GOOGLE ER: " + GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this));
-/*
-        LocationServices.getFusedLocationProviderClient(this).getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-                System.out.println("IT WORKS " + location.toString());
-
-                System.out.println(location.toString());
-                List<Address> list = null;
-                try {
-                    list = new Geocoder(context).getFromLocation(location.getLatitude(), location.getLongitude(),100);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                assert list != null;
-                Address address = list.get(0);
-                String countryCode = address.getCountryCode();
-                System.out.println("COUNTRY CODE IS: " + countryCode);
-
-
-                //TODO: UI updates.
-            }
-        });*/
 
 
         if (ContextCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this) == 0) {
@@ -251,7 +227,13 @@ public class MinigameLocationActivity extends AppCompatActivity {
                     .addOnSuccessListener(this, new OnSuccessListener<Location>() {
                         @Override
                         public void onSuccess(Location location) {
-                            //userLocation = location;
+
+                            if(location == null) {
+                                succeedMinigame();
+                                Toast.makeText(MinigameLocationActivity.this,"Your location appears to be null, aborting minigame" ,Toast.LENGTH_LONG).show();
+                                return;
+                            }
+
                             System.out.println(location.toString());
                             List<Address> list = null;
                             try {
@@ -264,10 +246,6 @@ public class MinigameLocationActivity extends AppCompatActivity {
                             countryCode = address.getCountryCode();
                             System.out.println("COUNTRY CODE IS: " + countryCode);
 
-                            // Got last known location. In some rare situations this can be null.
-                            if (location != null) {
-                                // Logic to handle location object
-                            }
                         }
                     });
         }
@@ -277,7 +255,7 @@ public class MinigameLocationActivity extends AppCompatActivity {
 
             Toast.makeText(this,"Sorry, cancelling this minigame due to lack of location access. Please permit this app to use your location." ,Toast.LENGTH_LONG).show();
             ActivityCompat.requestPermissions(this,
-                    new String[] { Manifest.permission.ACCESS_COARSE_LOCATION },
+                    new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
                     1);
 
             succeedMinigame();
@@ -473,9 +451,6 @@ public class MinigameLocationActivity extends AppCompatActivity {
     public void onPause() {
         super.onPause();
 
-        //cancelMinigame();
-        //Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
-        //startActivity(intent);
         SharedPreferences sharedPreference = getSharedPreferences("hiof.prosjekt.minigamebonanza_preferences", MODE_PRIVATE);
 
         NotificationChannelCreator.createNotificationChannel(this);

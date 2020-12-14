@@ -1,7 +1,5 @@
 package hiof.prosjekt.minigamebonanza.ui.main.fragments;
 
-import androidx.lifecycle.ViewModelProviders;
-
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import hiof.prosjekt.minigamebonanza.R;
-import hiof.prosjekt.minigamebonanza.ui.main.Minigame1ViewModel;
 
 public class SubmitScoreFragment extends Fragment  {
 

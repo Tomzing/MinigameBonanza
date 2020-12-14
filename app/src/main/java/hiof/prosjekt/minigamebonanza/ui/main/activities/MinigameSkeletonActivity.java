@@ -27,6 +27,7 @@ import hiof.prosjekt.minigamebonanza.ui.main.fragments.PreMinigameFragment;
 import hiof.prosjekt.minigamebonanza.ui.main.utility.MinigameUtility;
 import hiof.prosjekt.minigamebonanza.ui.main.viewmodel.StatusbarViewModel;
 
+/* ---OUTDATED--- */
 
 public class MinigameSkeletonActivity extends AppCompatActivity {
 

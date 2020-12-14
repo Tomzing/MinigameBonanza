@@ -13,11 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import hiof.prosjekt.minigamebonanza.R;
-import hiof.prosjekt.minigamebonanza.ui.main.BackgroundViewModel;
 
 public class ChooseGamemodeFragment extends Fragment {
-
-    private BackgroundViewModel mViewModel;
 
     public static ChooseGamemodeFragment newInstance() {
         return new ChooseGamemodeFragment();
@@ -28,12 +25,4 @@ public class ChooseGamemodeFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.choose_gamemode_fragment, container, false);
     }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mViewModel = ViewModelProviders.of(this).get(BackgroundViewModel.class);
-        // TODO: Use the ViewModel
-    }
-
 }

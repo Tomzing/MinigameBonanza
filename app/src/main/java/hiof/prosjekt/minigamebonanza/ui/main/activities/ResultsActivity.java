@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 
 import hiof.prosjekt.minigamebonanza.R;
+import hiof.prosjekt.minigamebonanza.ui.main.fragments.ResultsFragment;
 import hiof.prosjekt.minigamebonanza.ui.main.utility.NotificationBuilder;
 import hiof.prosjekt.minigamebonanza.ui.main.utility.NotificationChannelCreator;
 
@@ -40,7 +41,6 @@ import static java.util.List.of;
 public class ResultsActivity extends AppCompatActivity {
 
     TextView scoreResultsText, attemptsResultsText;
-    int submitBtnActive = 0;
     int REQUESTED_PERMISSION = 1;
     EditText inputName;
     String inputNameString = "";
@@ -51,11 +51,6 @@ public class ResultsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_results);
 
-        /*getSupportFragmentManager().beginTransaction()
-                .add(R.id.container, ResultsFragment.newInstance())
-                .commitNow();*/
-
-        //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(
@@ -83,60 +78,56 @@ public class ResultsActivity extends AppCompatActivity {
         attemptsResultsText.setText(String.valueOf(attemptsRemaining));
     }
 
-    /*@Override
-    public void onConfigurationChanged(@NonNull Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
+    public void submitScoreBtn(View view) throws FileNotFoundException {
 
-        // Checks the orientation of the screen
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            System.out.println("Landscape");
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-            Toast.makeText(this, "landscape", Toast.LENGTH_SHORT).show();
-        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
-            System.out.println("PORTRAIT");
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            Toast.makeText(this, "portrait", Toast.LENGTH_SHORT).show();
-        }
-    }*/
+        if (ContextCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
 
-    public void submitScoreBtn(View view){
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setMessage(R.string.input_name_message);
-        LayoutInflater inflater = this.getLayoutInflater();
-        final View mView = inflater.inflate(R.layout.input_name, null);
-        alertDialogBuilder.setView(mView);
-        alertDialogBuilder.setPositiveButton(R.string.submit, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                //Toast.makeText(ResultsActivity.this,"You clicked yes button",Toast.LENGTH_LONG).show();
-                //writeScoreToInternalStorage();
+            //Toast.makeText(ResultsActivity.this,"Permission to write is granted.",Toast.LENGTH_LONG).show();
 
-                inputName = (EditText)mView.findViewById(R.id.input_name_field);
-                inputNameString = inputName.getText().toString();
-                System.out.println(inputNameString);
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+            alertDialogBuilder.setMessage(R.string.input_name_message);
+            LayoutInflater inflater = this.getLayoutInflater();
+            final View mView = inflater.inflate(R.layout.input_name, null);
+            alertDialogBuilder.setView(mView);
+            alertDialogBuilder.setPositiveButton(R.string.submit, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
 
-                if(inputNameString.replaceAll("\\s", "").length() < 1) {
-                    Toast.makeText(ResultsActivity.this,R.string.input_name_toast_warning,Toast.LENGTH_LONG).show();
-                }
-                else {
-                    try {
-                        requestPermissions();
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
+                    inputName = (EditText)mView.findViewById(R.id.input_name_field);
+                    inputNameString = inputName.getText().toString();
+                    System.out.println(inputNameString);
+
+                    if(inputNameString.replaceAll("\\s", "").length() < 1) {
+                        Toast.makeText(ResultsActivity.this,R.string.input_name_toast_warning,Toast.LENGTH_LONG).show();
+                    }
+                    else {
+                        try {
+                            writeScoreToInternalStorage();
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
-            }
-        });
+            });
 
-        alertDialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
+            alertDialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
 
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
+
+        }
+        else  {
+
+            Toast.makeText(ResultsActivity.this,"In order to store your score on your phone, the app needs the ability to write to your phone's storage.",Toast.LENGTH_LONG).show();
+            ActivityCompat.requestPermissions(this,
+                    new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE },
+                    REQUESTED_PERMISSION);
+        }
     }
 
 
@@ -148,13 +139,8 @@ public class ResultsActivity extends AppCompatActivity {
         String name = inputNameString;
         String score = scoreResultsText.getText().toString();
         String attempts = attemptsResultsText.getText().toString() + "\n";
-        //File directory = new File(this.getFilesDir() + "/" + "files");
         File directory = new File(this.getFilesDir().getPath());
-        //String directory = "/data/data/hiof.prosjekt.minigamebonanza/files/";
         File file = new File(directory, fileName);
-
-        //File folder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
-
 
         if(!file.exists()) {
             try {
@@ -168,7 +154,6 @@ public class ResultsActivity extends AppCompatActivity {
 
         try {
             FileOutputStream fstream = new FileOutputStream(file, true);
-            //FileWriter writer = new FileWriter(file);
             OutputStreamWriter outputWriter = new OutputStreamWriter(fstream);
             outputWriter.append(name).append(seperator).append(score).append(seperator).append(attempts);
 
@@ -183,22 +168,6 @@ public class ResultsActivity extends AppCompatActivity {
         }
     }
 
-
-    private void requestPermissions() throws FileNotFoundException {
-        if (ContextCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-
-            Toast.makeText(ResultsActivity.this,"Permission to write is granted.",Toast.LENGTH_LONG).show();
-            writeScoreToInternalStorage();
-
-        }
-        else  {
-
-            Toast.makeText(ResultsActivity.this,"In order to store your score on your phone, the app needs the ability to write to your phone's storage.",Toast.LENGTH_LONG).show();
-            ActivityCompat.requestPermissions(this,
-                    new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE },
-                    REQUESTED_PERMISSION);
-        }
-    }
 
     @Override
     public void onResume() {

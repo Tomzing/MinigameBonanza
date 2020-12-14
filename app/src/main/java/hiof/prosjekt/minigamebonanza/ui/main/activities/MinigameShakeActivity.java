@@ -236,8 +236,6 @@ public class MinigameShakeActivity extends AppCompatActivity implements ShakeDet
                 .commitNow();
 
         successNotificationHandler.postDelayed(successNotificationRunnable, 3000);
-
-        //TODO implement method for going to next minigame, if no minigames left go to results screen
     }
 
     Handler successNotificationHandler = new Handler();
@@ -368,7 +366,7 @@ public class MinigameShakeActivity extends AppCompatActivity implements ShakeDet
     }
 
     public boolean validateShakes(int timesShakenCheck, boolean isTest) {
-        if(timesShakenCheck < 10) {
+        if(timesShakenCheck < 9) {
             if(!isTest) {
                 timesShaken++;
                 dingSoundEffectPlayer();
@@ -380,6 +378,8 @@ public class MinigameShakeActivity extends AppCompatActivity implements ShakeDet
         }
         else if(timesShakenCheck <= 10) {
             if(!isTest) {
+                timesShakenTextView = findViewById(R.id.timesShakenTextView);
+                timesShakenTextView.setText("10");
                 succeedMinigame();
             }
         }

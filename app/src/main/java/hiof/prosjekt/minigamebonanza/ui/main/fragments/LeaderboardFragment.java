@@ -13,12 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import hiof.prosjekt.minigamebonanza.R;
-import hiof.prosjekt.minigamebonanza.ui.main.MyItemRecyclerViewAdapter;
 import hiof.prosjekt.minigamebonanza.ui.main.dummy.DummyContent;
 
-/**
- * A fragment representing a list of Items.
- */
+
 public class LeaderboardFragment extends Fragment {
 
     // TODO: Customize parameter argument names
@@ -26,15 +23,9 @@ public class LeaderboardFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 3;
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
     public LeaderboardFragment() {
     }
 
-    // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
     public static LeaderboardFragment newInstance(int columnCount) {
         LeaderboardFragment fragment = new LeaderboardFragment();
         Bundle args = new Bundle();
@@ -50,24 +41,5 @@ public class LeaderboardFragment extends Fragment {
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_leaderboard_list, container, false);
-
-        // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-            recyclerView.setAdapter(new MyItemRecyclerViewAdapter(DummyContent.ITEMS));
-        }
-        return view;
     }
 }

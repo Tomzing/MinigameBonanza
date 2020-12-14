@@ -98,6 +98,7 @@ public class MainMenuActivity extends AppCompatActivity {
         //Intent intent = new Intent(getApplicationContext(), MinigameShakeActivity.class);
         //Intent intent = new Intent(getApplicationContext(), MinigameLocationActivity.class);
 
+
         //MotionLayout motionLayout = v.findViewById(R.id.startGamePressed);
         //((MotionLayout)v.findViewById(R.id.startGamePressed)).transitionToEnd();
         //((MotionLayout)findViewById(R.id.startGamePressedEnd)).transitionToEnd();

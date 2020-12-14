@@ -34,7 +34,6 @@ public class LeaderboardActivity extends AppCompatActivity {
 
         String fileName = "MBscores.txt";
         File directory = new File(this.getFilesDir().getPath());
-        //String directory = "/data/data/hiof.prosjekt.minigamebonanza/files/";
         File file = new File(directory, fileName);
         String[] headerList = {"Name","Attempts remaining","Score"};
 

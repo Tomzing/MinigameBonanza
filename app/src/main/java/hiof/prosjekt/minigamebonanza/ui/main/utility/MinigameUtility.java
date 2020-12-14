@@ -35,10 +35,6 @@ public abstract class MinigameUtility {
             System.out.println("Calculate points return " + points);
 
             return points;
-            //System.out.println("Calculate points return " + (timeAvailable - timeRemaining) * 100);
-            //return (timeAvailable / (timeAvailable - timeRemaining)) * 100;
-            //return ((timeAvailable - (timeRemaining - timeAvailable) * 100));
         }
-        //return (timeAvailable + timeRemaining)  * 5;
     }
 }
